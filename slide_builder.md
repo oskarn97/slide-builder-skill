@@ -2,7 +2,7 @@
 
 > **Erstellt professionelle HTML-Slides für Kundenpräsentationen**
 > 
-> Die Slides ergänzen Streamlit/SI Demos und bilden einen integrierten Präsentationsflow.
+> Die Slides können standalone oder als Ergänzung zu Live-Demos verwendet werden.
 
 ---
 
@@ -18,8 +18,8 @@ Layout: [custom | snowflake_corporate]
 ```
 
 > **Layout-Option:**
-> - `custom` (Standard) — Kunden-CI, weiße Slides, individuelle Farben, Kunden- + Snowflake-Logo
-> - `snowflake_corporate` — Offizielles Snowflake-Design: dunkle Slides, Snowflake-Branding, Copyright-Footer, keine Kunden-Logos. Für Standard-Intros, Plattform-Overviews und generische Snowflake-Präsentationen.
+> - `custom` (Standard) — Kunden-CI, weiße Slides, individuelle Farben, Kunden- + Company-Logo
+> - Weitere Layouts koennen ueber Addons bereitgestellt werden (z.B. `snowflake_addon.md` fuer Snowflake Corporate Layout)
 
 ---
 
@@ -63,28 +63,10 @@ Context → Customer 360 → Supply Chain → Personalization → Demo → Scala
 ### Vor dem Erstellen prüfen:
 
 1. **Kundenordner lesen** — Requirements, Meeting Notes, Pain Points
-2. **RAVEN_REPORT.md lesen** — Falls vorhanden: **Single Source of Truth** für alle datenbasierten Inhalte
-3. **Prioritäten identifizieren** — Was ist das "Lighthouse Project"?
+2. **Prioritäten identifizieren** — Was ist das "Lighthouse Project"?
 4. **Stakeholder-Map** — Wer ist im Raum? Was sind deren Interessen?
 5. **Wettbewerbssituation** — Welche Alternativen werden evaluiert?
 6. **Zeitrahmen** — Wie viel Zeit haben wir? Demo-Anteil?
-
-### Raven Report als Input (PFLICHT wenn vorhanden)
-
-Falls `RAVEN_REPORT.md` im Kundenordner existiert, **MUSS** dieser als primäre Quelle für folgende Slide-Inhalte verwendet werden:
-
-| Slide | Raven Report Sektion | Was übernehmen |
-|-------|---------------------|----------------|
-| **Title Slide** | `SECTION:executive_summary` | Hook / Subtitle |
-| **Agenda** | `SECTION:industry_landscape` | Branchenzahl ("X Kunden in Ihrer Branche") |
-| **"Your Key Principles"** | `SECTION:pain_points` | Pain Points als Requirements |
-| **Use-Case-Slides** | `SECTION:use_case_mapping` | Opportunity, Snowflake-Produkte, Data Sources |
-| **Customer References** | `SECTION:references` | 2-3 Referenz-Boxen mit ROI-Zahlen |
-| **Case Study** | `SECTION:reference_detail` | Deep-Dive der besten Referenz |
-| **"Why Snowflake?"** ⛔ | `SECTION:competitive_intel` | Comparison-Table-Zeilen — **NUR auf explizite Anfrage einbauen!** |
-| **"How We Deliver"** | `SECTION:use_case_mapping` + `SECTION:business_value` | Feature → Requirement Mapping |
-
-> **Referenzierung:** `@[Kunde]/RAVEN_REPORT.md` — Sektionen durch `<!-- SECTION:id -->` Marker identifizierbar.
 
 ---
 
@@ -167,7 +149,7 @@ Falls `RAVEN_REPORT.md` im Kundenordner existiert, **MUSS** dieser als primäre 
 │     → JETZT macht die Lösung Sinn (Pain ist etabliert)          │
 │  • Platform Architecture                                        │
 │  • Implementation Roadmap                                       │
-│  • ⛔ KEIN "Why Snowflake?" Comparison (nur auf expl. Anfrage) │
+│  • KEIN "Why Us?" Comparison (nur auf expl. Anfrage)          │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -181,7 +163,7 @@ Falls `RAVEN_REPORT.md` im Kundenordner existiert, **MUSS** dieser als primäre 
 
 ### 2. Key Principles: Aufteilen!
 
-**FALSCH:** Requirements + Snowflake Features früh in der Präsentation
+**FALSCH:** Requirements + Solution Features frueh in der Praesentation
 **RICHTIG:** Aufteilen in zwei Slides
 
 | Slide | Position | Inhalt | Ziel |
@@ -201,12 +183,7 @@ Falls `RAVEN_REPORT.md` im Kundenordner existiert, **MUSS** dieser als primäre 
 | **Pricing/Commercial** | Wenn explizit angefragt | Vor Next Steps |
 | **Case Study Detail** | Spezifische Referenz besonders relevant | Nach References |
 
-> **Customer References recherchieren:**
-> 1. **Bevorzugt:** Aus `RAVEN_REPORT.md` lesen (Sektionen `references` + `reference_detail`)
->    → `@[Kunde]/RAVEN_REPORT.md`
-> 2. **Falls kein Report:** Raven Research Agent manuell befragen
->    → `@demo_builder/modules/06_raven_research/raven_research.md`
->    → Typische Frage: `"Give me 3 customer references for [PRODUKT] in [BRANCHE] in [REGION]"`
+> **Customer References:** Falls ein Addon (z.B. `snowflake_addon.md`) geladen ist, dort die Recherche-Anleitung fuer References beachten.
 
 ### 4. Talk Track erstellen (`TALK_TRACK.html`)
 
@@ -241,7 +218,7 @@ Jeder Talk Track MUSS diese Elemente enthalten:
 | Feld | Inhalt |
 |------|--------|
 | Teilnehmer (Kunde) | Namen + Rollen (z.B. "Mark (CIO), Jonas (Data Lead)") |
-| Teilnehmer (Snowflake) | Namen -- AE zuerst, dann SE/weitere |
+| Teilnehmer (eigenes Team) | Namen -- Account Executive zuerst, dann SE/weitere |
 | Letzter Termin | Datum + was besprochen wurde |
 | Ziel dieses Termins | Ein Satz |
 | Gewünschtes Outcome / CTA | Konkreter nächster Schritt |
@@ -444,15 +421,9 @@ Weitere Elemente aus dem Talk Track Design-System (`.context-box`, `.checklist`)
 
 ### Logos
 
-#### Snowflake Logo
+#### Company Logo
 
-Das offizielle Snowflake-Logo als SVG wird **immer** von dieser URL eingebunden:
-
-```
-https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg
-```
-
-> **Regel:** Dieses Logo in jeder Präsentation verwenden — auf Title Slide, Thank You Slide und überall dort, wo das Snowflake-Branding erscheint. Keine Text-Platzhalter oder alternative URLs nutzen.
+Falls ein Addon geladen ist (z.B. `snowflake_addon.md`), enthaelt dieses die spezifische Logo-URL und Branding-Regeln fuer den Firmenkontext. Das Company Logo erscheint auf Title Slide, Thank You Slide und ueberall dort, wo das Firmen-Branding dargestellt wird.
 
 #### Kunden-Logos
 
@@ -489,7 +460,7 @@ https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg
     <div class="logos">
         <img src="[KUNDE_LOGO_URL]" alt="[Kunde]" style="height: 45px; filter: brightness(0) invert(1);">
         <span style="opacity: 0.4; font-size: 24px;">×</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" alt="Snowflake" style="height: 40px;">
+        <img src="[COMPANY_LOGO_URL]" alt="[Company]" style="height: 40px;">
     </div>
 </div>
 ```
@@ -497,7 +468,7 @@ https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg
 **Design:**
 - Dark gradient background (Kunden-CI)
 - Zentrierter Inhalt
-- Logos am unteren Rand
+- Logos am unteren Rand (Kunde × Company)
 
 ### 2. Standard Content Slide
 
@@ -631,7 +602,7 @@ Für Übergänge, Zitate, Live Demo Transition.
         
         <!-- Platform Badge -->
         <div style="margin-top: 60px; padding: 20px 40px; background: rgba(0,214,125,0.15); border-radius: 12px; border: 1px solid var(--primary-green);">
-            <span style="color: var(--primary-green); font-size: 18px; font-weight: 500;">Streamlit App running on Snowflake</span>
+            <span style="color: var(--primary-green); font-size: 18px; font-weight: 500;">[Live Demo Application]</span>
         </div>
     </div>
 </div>
@@ -688,8 +659,8 @@ Für Übergänge, Zitate, Live Demo Transition.
         <!-- Zwei-Spalten Header -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 25px;">
             <div style="font-size: 20px; font-weight: 600;">Your Requirement</div>
-            <div style="font-size: 20px; font-weight: 600; color: var(--snowflake-blue);">
-                <!-- Snowflake Icon --> Snowflake Solution
+            <div style="font-size: 20px; font-weight: 600; color: var(--accent-blue);">
+                Our Solution
             </div>
         </div>
         
@@ -708,8 +679,8 @@ Für Übergänge, Zitate, Live Demo Transition.
                     </div>
                 </div>
                 
-                <!-- Rechte Spalte: Snowflake Feature -->
-                <div style="display: flex; align-items: center; gap: 15px; background: linear-gradient(135deg, #e3f6fc 0%, #d1f0fa 100%); padding: 15px 25px; border-radius: 0; border-left: 4px solid var(--snowflake-blue);">
+                <!-- Rechte Spalte: Solution Feature -->
+                <div style="display: flex; align-items: center; gap: 15px; background: linear-gradient(135deg, #e3f6fc 0%, #d1f0fa 100%); padding: 15px 25px; border-radius: 0; border-left: 4px solid var(--accent-blue);">
                     <svg><!-- Checkmark --></svg>
                     <div>
                         <div style="font-size: 20px; font-weight: 600; color: #1a7ba8;">[Feature Name]</div>
@@ -850,15 +821,15 @@ Für Übergänge, Zitate, Live Demo Transition.
             
             <!-- Center: Platform Layers (flex + max-width für kontrollierte Breite) -->
             <div style="flex: 1; max-width: 800px; display: flex; flex-direction: column; gap: 12px; margin: 0 auto;">
-                <!-- Header: Snowflake Logo + NUR Cloud-Kontext, KEIN "Snowflake" Text (Logo enthält bereits den Namen) -->
+                <!-- Header: Company Logo + Kontext -->
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; height: 30px;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" alt="Snowflake" style="height: 22px;">
-                    <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8;">(in [Azure/AWS/GCP])</div>
+                    <img src="[COMPANY_LOGO_URL]" alt="[Company]" style="height: 22px;">
+                    <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8;">[Platform Context]</div>
                 </div>
                 <!-- Layer-Karten: font-size 20px Titel, 15px Subtitel (gleich wie Seitenspalten!) -->
-                <div style="display: flex; gap: 16px; padding: 20px 26px; background: white; border: 1px solid #e2e8f0; border-left: 4px solid var(--snowflake-blue); align-items: center;">
+                <div style="display: flex; gap: 16px; padding: 20px 26px; background: white; border: 1px solid #e2e8f0; border-left: 4px solid var(--accent-blue); align-items: center;">
                     <div style="width: 48px; height: 48px; background: rgba(41,181,232,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--snowflake-blue)" stroke-width="2"><!-- icon --></svg>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><!-- icon --></svg>
                     </div>
                     <div>
                         <div style="font-size: 20px; font-weight: 700;">[Layer Name]</div>
@@ -904,7 +875,7 @@ Für Übergänge, Zitate, Live Demo Transition.
 | **Karten-Gap** | **`14px` Seitenspalten, `12px` Center** | Konsistent, nicht zu weit auseinander |
 | **Arrow-Padding** | **`padding: 0 20px`** | 14px war zu eng — Pfeile klebten an Spalten |
 | **Alle Spalten-Header** | `height: 30px; display: flex; align-items: center;` | Gleiche Höhe → sauberes Alignment |
-| **Center-Header** | Snowflake Logo (`<img>`) + NUR Cloud-Kontext `(in Azure)` | Logo enthält bereits "snowflake" — kein doppelter Text |
+| **Center-Header** | Company Logo (`<img>`) + Platform-Kontext | Logo enthaelt bereits den Firmennamen — kein doppelter Text |
 | **Bottom-Bar Font** | **`font-size: 18px`** | 17px war zu klein |
 | **3-Column-Container** | **KEIN `flex: 1`** | Sonst wird Bottom-Bar nach ganz unten gedrückt |
 | **Bottom-Bar margin** | `margin-top: auto; padding-top: 24px;` | Natürlicher Abstand, nicht eingeklemmt |
@@ -1049,7 +1020,7 @@ Wenn 2-3 Use Cases jeweils nur halb gefüllte Slides erzeugen → **auf einen Sl
     <div class="logos">
         <img src="[KUNDE_LOGO_URL]" alt="[Kunde]" style="height: 45px; filter: brightness(0) invert(1);">
         <span style="opacity: 0.4; font-size: 24px;">×</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" alt="Snowflake" style="height: 40px;">
+        <img src="[COMPANY_LOGO_URL]" alt="[Company]" style="height: 40px;">
     </div>
 </div>
 ```
@@ -1079,7 +1050,7 @@ Für interne Strategy-Slides mit **mehreren Dimensionen** (z.B. Market Opportuni
             </div>
 
             <!-- Row 1: 3 Karten (je eine Farbe) -->
-            <div style="background: #fafbfc; border: 1px solid #eceef1; border-left: 5px solid var(--snowflake-blue); padding: 28px 32px;">
+            <div style="background: #fafbfc; border: 1px solid #eceef1; border-left: 5px solid var(--accent-blue); padding: 28px 32px;">
                 <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
                     <!-- SVG Icon --> 
                     <div style="font-size: 24px; font-weight: 700; color: var(--text-dark);">[Titel]</div>
@@ -1109,7 +1080,7 @@ Für interne Strategy-Slides mit **mehreren Dimensionen** (z.B. Market Opportuni
 | Zeilen | `grid-template-rows: 1fr 1fr 1fr` — **alle Boxen gleich groß** |
 | Box-Padding | `28px 32px` — kein Flex, festes Padding |
 | Row-Labels | 15px, uppercase, `#475569`, vertikal zentriert |
-| Farbkodierung | Spalte 1: `--snowflake-blue`, Spalte 2: `--accent-green`, Spalte 3: `--accent-purple` |
+| Farbkodierung | Spalte 1: `--accent-blue`, Spalte 2: `--accent-green`, Spalte 3: `--accent-purple` |
 | Content-Padding unten | `80px` — Slide nicht ganz füllen, Luft nach unten |
 | Grid-Höhe | `calc(100% - 40px)` — zusätzlicher Puffer nach unten |
 
@@ -1143,7 +1114,7 @@ Für **Partner- oder Migrations-Szenarien** mit strukturierten Feldern und konkr
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 28px;">
 
             <!-- Scenario Card (wiederholen für jedes Szenario) -->
-            <div style="background: #fafbfc; border: 1px solid #eceef1; border-left: 5px solid var(--snowflake-blue); padding: 32px 30px;">
+            <div style="background: #fafbfc; border: 1px solid #eceef1; border-left: 5px solid var(--accent-blue); padding: 32px 30px;">
                 <div style="font-size: 24px; font-weight: 700; color: var(--text-dark); margin-bottom: 22px;">[Szenario-Name]</div>
 
                 <!-- Strategie -->
@@ -1184,12 +1155,12 @@ Für **Partner- oder Migrations-Szenarien** mit strukturierten Feldern und konkr
         </div>
 
         <!-- Focus Areas -->
-        <div style="background: #fafbfc; border: 1px solid #eceef1; border-left: 5px solid var(--snowflake-blue); padding: 28px 34px;">
+        <div style="background: #fafbfc; border: 1px solid #eceef1; border-left: 5px solid var(--accent-blue); padding: 28px 34px;">
             <div style="font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 16px;">Focus Areas</div>
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 <!-- Pro Focus Area -->
                 <div style="display: flex; align-items: baseline; gap: 14px; font-size: 18px; color: #334155; line-height: 1.5;">
-                    <span style="font-size: 16px; font-weight: 700; color: white; background: var(--snowflake-blue); width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">[Nr]</span>
+                    <span style="font-size: 16px; font-weight: 700; color: white; background: var(--accent-blue); width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">[Nr]</span>
                     <span>[Beschreibung mit <strong>Highlights</strong> und <strong style="color: #1a8ab5;">Targets in Blau</strong>]</span>
                 </div>
             </div>
@@ -1210,8 +1181,8 @@ Für **Partner- oder Migrations-Szenarien** mit strukturierten Feldern und konkr
 | Risk/Mitigation | Nebeneinander (`display: flex; gap: 24px`) |
 | Key Driver | Abgetrennt mit `border-top: 1px solid #eceef1` |
 | Connector Bar | `--bg-dark` Hintergrund, weißer Text, zentriert, inline |
-| Focus Areas | Nummerierte Kreise (`--snowflake-blue`), Targets in `color: #1a8ab5` bold |
-| Farbkodierung | Karte 1: `--snowflake-blue`, Karte 2: `--accent-green`, Karte 3: `--accent-purple` |
+| Focus Areas | Nummerierte Kreise (`--accent-blue`), Targets in `color: #1a8ab5` bold |
+| Farbkodierung | Karte 1: `--accent-blue`, Karte 2: `--accent-green`, Karte 3: `--accent-purple` |
 
 ---
 
@@ -1298,7 +1269,7 @@ Karten strecken sich gleichmäßig und füllen den verfügbaren Platz. Der Text 
 > |-------------|-------------|----------------------|
 > | Beschreibungstext | `color: var(--text-light)` (#666) | `color: #334155` (dunkles Slate) |
 > | Labels / Subtitles | `color: rgba(255,255,255,0.4)` | `color: rgba(255,255,255,0.7)` oder heller |
-> | Farbige Titel | `color: var(--snowflake-blue)` (#29B5E8) | Dunklere Variante: `#1a8ab5` |
+> | Farbige Titel | `color: var(--accent-blue)` (#29B5E8) | Dunklere Variante: `#1a8ab5` |
 > | Farbige Titel | `color: var(--gov-green)` (#00D67D) | Dunklere Variante: `#0a8a55` |
 > | Farbige Titel | `color: var(--horizon-purple)` (#7C3AED) | Dunklere Variante: `#6528c7` |
 > | Borders auf Farb-BG | `border: 1px solid rgba(..., 0.4)` | `border: 2px solid rgba(..., 0.6)` |
@@ -1421,10 +1392,10 @@ die genauen Auslöser identifiziert:
     /* Kunden-CI */
     --primary-green: #00D67D;      /* Hauptfarbe */
     --secondary-green: #00A878;    /* Sekundärfarbe */
-    --bg-dark: #11293E;            /* Dunkler Hintergrund — Snowflake-CI-konform (kühles Dunkelblau) */
+    --bg-dark: #11293E;            /* Dunkler Hintergrund (kühles Dunkelblau) */
     
-    /* Snowflake */
-    --snowflake-blue: #29B5E8;
+    /* Akzentfarbe */
+    --accent-blue: #29B5E8;
     
     /* Text */
     --text-dark: #1a1a1a;
@@ -1437,14 +1408,13 @@ die genauen Auslöser identifiziert:
 
 ### `--bg-dark` Farbwahl
 
-> **WICHTIG:** `--bg-dark` muss immer ein **kühles, blau-getöntes Dunkelblau** sein, das zur Snowflake Corporate Identity passt. Der Standard ist `#11293E`.
+> **WICHTIG:** `--bg-dark` sollte ein **kuehles, blau-getoentes Dunkelblau** sein. Der Standard ist `#11293E`.
 >
-> **NIEMALS** verwenden:
-> - `#1a1a2e` — dunkles Violett-Navy (stammt aus alten Sievert-Slides)
-> - `#0D2818` — dunkles Grün (zu kundenspezifisch)
+> **Vermeiden:**
 > - Reines Schwarz (`#000`, `#111`) — wirkt zu hart
+> - Stark gesaettigte Farben — das Dunkelblau soll neutral wirken
 >
-> Snowflake-CI fühlt sich hell, modern und blau an. Dunkle Flächen sind die Ausnahme und sollten sich wie ein natürlicher Teil des Snowflake-Universums anfühlen.
+> Dunkle Flaechen sind fuer Header und Akzente gedacht, der Grossteil der Slides bleibt hell.
 
 ---
 
@@ -1486,15 +1456,15 @@ Dunkle Hintergründe (`--bg-dark`) nur für **schmale Bars** verwenden:
 - Kein `border-radius` auf dunklen Bars
 - Innere Boxen auf dunklem Hintergrund: `background: rgba(255,255,255,0.06)` + farbiger `border-left`
 
-### Header & Slide-Hintergrund — Snowflake Corporate Layout
+### Header & Slide-Hintergrund
 
 - **Slide-Hintergrund**: Immer weiß
-- **Header**: Weißer Hintergrund, schwarzer Text (`--text-dark`), **blauer Akzentbalken am linken Rand**
-- **Footer**: Optional — kann dunkel sein (schmale Bar) oder ganz weggelassen werden (besonders bei internen Slides)
+- **Header**: Weißer Hintergrund, schwarzer Text (`--text-dark`), **farbiger Akzentbalken am linken Rand**
+- **Footer**: Optional — kann dunkel sein (schmale Bar) oder ganz weggelassen werden
 
-#### PFLICHT: Blauer Balken links im Header
+#### PFLICHT: Farbiger Balken links im Header
 
-Jeder Content-Slide-Header hat einen **Snowflake-blauen Balken** (`--snowflake-blue`, 12px breit) der **ganz links am Seitenrand** sitzt. Der Titel steht mit Abstand rechts davon.
+Jeder Content-Slide-Header hat einen **farbigen Balken** (`--accent-blue`, 12px breit) der **ganz links am Seitenrand** sitzt. Der Titel steht mit Abstand rechts davon.
 
 ```css
 .slide-header {
@@ -1511,7 +1481,7 @@ Jeder Content-Slide-Header hat einen **Snowflake-blauen Balken** (`--snowflake-b
     display: block;
     width: 12px;                  /* Balken-Breite */
     flex-shrink: 0;
-    background: var(--snowflake-blue);
+    background: var(--accent-blue);
 }
 ```
 
@@ -1888,21 +1858,6 @@ Der Footer (`sf-footer-bar` / `.slide-footer`) ist `position: absolute; bottom: 
 | **Fachbereich** | Konkrete Use Cases, Self-Service, Beispiel-Reports | Infrastruktur-Details, Deployment-Modelle |
 | **Mixed Audience** | Business Value vorne, technische Details im Appendix | Zu tief in eine Richtung kippen |
 
-### Kosten-Messaging: Vorsicht bei Preismodell-Aussagen
-
-Snowflake platziert in der Regel **Kapazitätsverträge mit festem Commitment** (nicht reines Pay-per-Use). Slides müssen das korrekt widerspiegeln:
-
-| Formulierung | Bewertung | Warum |
-|---|---|---|
-| "Pay-per-Use, nur zahlen was genutzt wird" | **Falsch** | Suggeriert On-Demand ohne Commitment |
-| "Planbare Kosten, volle Transparenz" | **Richtig** | Betont Planbarkeit + Steuerbarkeit |
-| "Festes Commitment, flexible Nutzung" | **Richtig** | Ehrlich über Vertrag, positiv über Flexibilität |
-| "Verbrauch jederzeit steuerbar" | **Richtig** | Betont Governance-Aspekt (CIO-relevant) |
-| "Keine Hardware-Fixkosten" | **Richtig** | Stimmt — Cloud vs. On-Prem |
-| "Kosten skalieren mit dem Business" | **OK** | Stimmt im Rahmen des Commitments |
-
-**Goldene Regel:** Auf CIO-Level nie "kostenlos" oder "nur zahlen was genutzt wird" formulieren — ein CIO kennt den Unterschied und verliert Vertrauen. Stattdessen: **Transparenz, Planbarkeit, Steuerbarkeit** betonen.
-
 ### Vertraulichkeit: Keine Personenreferenzen aus Meeting Notes
 
 Meeting Notes enthalten oft vertrauliche Aussagen einzelner Personen (z.B. "Jana findet, dass...", "Timke hat gesagt..."). Diese dürfen **NIEMALS** auf Slides erscheinen:
@@ -2045,7 +2000,7 @@ Wenn `Integration: mit_demo`:
 - [ ] **Jede Karte hat eigenes SVG-Icon** — Karten ohne Icon wirken leer und erzwingen mehr Text. Ein 42-46px Icon-Container füllt die Karte visuell.
 - [ ] **Einheitliche Schriftgröße:** Titel in ALLEN Spalten (links, mitte, rechts) identisch **18px**. Nicht 17px in der Mitte und 18px außen.
 - [ ] **Spalten-Header Alignment:** Alle drei Spalten-Header mit `height: 30px; display: flex; align-items: center;` — gleiche Höhe für sauberes visuelles Alignment.
-- [ ] **Center-Header mit Snowflake Logo:** `<img src="...Snowflake_Logo.svg" style="height: 22px;">` + NUR Cloud-Kontext `(in Azure)`. **NICHT** "Snowflake (in Azure)" — das Logo enthält bereits den Namen "snowflake".
+- [ ] **Center-Header mit Company Logo:** `<img src="[COMPANY_LOGO_URL]" style="height: 22px;">` + Platform-Kontext. **NICHT** den Firmennamen als Text dazuschreiben — das Logo enthaelt ihn bereits.
 - [ ] **3-Column-Container KEIN `flex: 1`:** Sonst wird die Bottom-Bar ganz nach unten gedrückt. Stattdessen natürliche Höhe, Bottom-Bar folgt mit `margin-top: auto; padding-top: 30px;`.
 - [ ] **Bottom-Bar KEIN `border-top`:** Der Slide-Footer hat bereits eine Linie — doppelte border-top vermeiden.
 - [ ] **Use-Case-Slides konsolidieren:** ≤3 Use Cases → 1 Slide mit Karten nebeneinander. Jede Karte braucht: Icon (56px, eigene Zeile), Badge, Titel (24px), Beschreibung (17px), **Hero-KPI (42px, farbige Box)**, Checkmarks (16px). KEIN `height: 100%` auf Container, KEIN `margin-top: auto` auf Value-Section.
@@ -2109,718 +2064,12 @@ Slide 12: Platform Architecture
 Slide 13: Implementation Roadmap
 Slide 14: Next Steps
 Slide 15: Thank You
-          (⛔ KEIN "Why Snowflake? Comparison" — nur auf explizite Anfrage)
+          (KEIN "Why Us? Comparison" — nur auf explizite Anfrage)
 ```
 
 ---
 
-## Snowflake Corporate Layout (`Layout: snowflake_corporate`)
+## Weitere Layouts (via Addons)
 
-> **Dieses Layout repliziert das offizielle Snowflake-Präsentationsdesign.**
-> Es ist für Standard-Intros, Plattform-Overviews und generische Snowflake-Präsentationen gedacht —
-> also immer dann, wenn **kein** kundenspezifisches Branding benötigt wird.
+Zusaetzliche Layouts (z.B. Corporate-Designs) werden ueber Addon-Dateien bereitgestellt. Siehe `snowflake_addon.md` als Beispiel.
 
-### Wann verwenden?
-
-| Situation | Layout |
-|-----------|--------|
-| Kunden-Workshop, POC-Präsentation, Folgetermin | `custom` |
-| Snowflake Intro, Plattform-Overview, Event-Talk | `snowflake_corporate` |
-| Gemischt (Intro + Kunden-Deep-Dive) | `snowflake_corporate` für Intro-Slides, dann `custom` für Kunden-Teil |
-
-### Template
-
-Bei `Layout: snowflake_corporate` das Template `slide_template_corporate.html` verwenden.
-
-```
-@.cursor/skills/slide-builder/slide_template_corporate.html
-```
-
----
-
-### Design-Prinzipien (Corporate)
-
-| Eigenschaft | Corporate Layout | Custom Layout |
-|-------------|-----------------|---------------|
-| **Hintergrund** | Fast alle Slides dunkel (#0E1C2F) | Weiße Slides, dunkler Header |
-| **Primärfarbe** | Snowflake Light Blue (#29B5E8) | Kunden-CI-Farbe |
-| **Sekundärfarbe** | Bright Blue (#1B98D4), Violet (#7C3AED) | Kunden-Sekundärfarbe |
-| **Text** | Weiß auf dunkel | Dunkel auf weiß |
-| **Footer** | "© 2025 Snowflake Inc. All Rights Reserved" + Logo | Event-Name + Slide-Nr |
-| **Logos** | Nur Snowflake | Kunde × Snowflake |
-| **Header-Bar** | Kein separater Header — Titel direkt auf dunklem Hintergrund | Dunkler Header-Balken |
-| **Slide-Nummern** | Dezent im Footer oder als Overlay | Im Footer |
-| **Typografie** | Sehr groß, viel Negativraum, wenig Text | Kompakter, mehr Content |
-| **Icons** | Lineare SVG-Icons in Light Blue | SVG-Icons in Primärfarbe |
-
----
-
-### CSS Variables (Corporate)
-
-```css
-:root {
-    /* Snowflake Corporate CI */
-    --sf-navy: #0E1C2F;          /* Primärer Hintergrund — tiefes Navy */
-    --sf-navy-light: #162A45;    /* Leicht helleres Navy für Karten/Akzente */
-    --sf-navy-mid: #1A3352;      /* Mittlerer Navy-Ton für Hover/Hervorhebungen */
-    --sf-blue: #29B5E8;          /* Snowflake Light Blue — primäre Akzentfarbe */
-    --sf-blue-dark: #1B98D4;     /* Dunklerer Blue für Kontrast */
-    --sf-violet: #7C3AED;        /* Akzent-Violett (für Diagramme, Badges) */
-    --sf-green: #00D67D;         /* Akzent-Grün (für Checkmarks, Erfolg) */
-    --sf-white: #FFFFFF;         /* Primäre Textfarbe */
-    --sf-white-80: rgba(255,255,255,0.8);  /* Sekundärer Text */
-    --sf-white-60: rgba(255,255,255,0.6);  /* Tertiärer Text */
-    --sf-white-40: rgba(255,255,255,0.4);  /* Dezente Labels */
-    --sf-white-10: rgba(255,255,255,0.10); /* Karten-Hintergrund auf dunkel */
-    --sf-white-06: rgba(255,255,255,0.06); /* Sehr dezenter Karten-BG */
-    --sf-border: rgba(255,255,255,0.12);   /* Karten-Borders */
-
-    /* Gradient-Akzente */
-    --sf-gradient-blue: linear-gradient(135deg, #29B5E8 0%, #1B7ED4 100%);
-    --sf-gradient-title: linear-gradient(180deg, #0E1C2F 0%, #162A45 100%);
-}
-```
-
----
-
-### Corporate Slide-Typen (aus dem offiziellen Deck)
-
-#### 1. Title Slide (`.slide.sf-title`)
-
-**Referenz:** Slide 1 — "SNOWFLAKE INTRO"
-
-Dunkler Hintergrund, zentriertes Layout, großer "SNOWFLAKE"-Schriftzug, Untertitel, Presenter-Namen, Snowflake-Logo.
-
-```html
-<div class="slide sf-title">
-    <!-- Snowflake Logo Icon (zentral, groß) -->
-    <div class="sf-logo-icon">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" 
-             alt="Snowflake" style="height: 80px; opacity: 0.3;">
-    </div>
-    
-    <h1>SNOWFLAKE</h1>
-    <h2>[UNTERTITEL]</h2>
-    
-    <div class="sf-presenters">
-        <span>[Name 1]</span>
-        <span>[Name 2]</span>
-    </div>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
-**CSS:**
-```css
-.slide.sf-title {
-    background: var(--sf-gradient-title);
-    color: var(--sf-white);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.slide.sf-title h1 {
-    font-size: 96px;
-    font-weight: 800;
-    letter-spacing: 12px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-}
-
-.slide.sf-title h2 {
-    font-size: 48px;
-    font-weight: 300;
-    color: var(--sf-white-80);
-    letter-spacing: 2px;
-    margin-bottom: 60px;
-}
-
-.slide.sf-title .sf-presenters {
-    display: flex;
-    gap: 40px;
-    font-size: 22px;
-    color: var(--sf-white-60);
-    font-weight: 400;
-}
-
-.slide.sf-title .sf-logo-icon {
-    margin-bottom: 40px;
-}
-```
-
----
-
-#### 2. Statement Slide (`.slide.sf-statement`)
-
-**Referenz:** Slide 2 — "Every Organization Struggles with Silos"
-
-Dunkler Hintergrund, großer Titel oben, Key Statement prominent in der Mitte, optional: Beschreibungstext und Highlight-Block.
-
-```html
-<div class="slide sf-dark">
-    <div class="sf-slide-number">2</div>
-    
-    <div class="sf-content-area">
-        <h1>[Titel / Provokante These]</h1>
-        <p class="sf-subtitle">[Erklärung / Kontext — 1 Zeile]</p>
-        
-        <!-- Key Statement Block -->
-        <div class="sf-key-statement">
-            <div class="sf-statement-text">
-                [KERNAUSSAGE IN GROSSBUCHSTABEN]<br>
-                [ZWEITE ZEILE DER AUSSAGE]
-            </div>
-        </div>
-    </div>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
-**CSS:**
-```css
-.slide.sf-dark {
-    background: var(--sf-navy);
-    color: var(--sf-white);
-    position: relative;
-}
-
-.sf-slide-number {
-    position: absolute;
-    top: 50px;
-    right: 80px;
-    font-size: 18px;
-    color: var(--sf-white-40);
-    font-weight: 500;
-}
-
-.sf-content-area {
-    padding: 100px 120px 120px;
-    height: calc(1080px - 60px);  /* Abzug für Footer */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.sf-content-area h1 {
-    font-size: 52px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-
-.sf-subtitle {
-    font-size: 24px;
-    color: var(--sf-white-60);
-    margin-bottom: 60px;
-    line-height: 1.6;
-}
-
-.sf-key-statement {
-    background: var(--sf-white-06);
-    border-left: 5px solid var(--sf-blue);
-    padding: 40px 50px;
-    margin-top: 20px;
-}
-
-.sf-statement-text {
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.4;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--sf-white);
-}
-```
-
----
-
-#### 3. Platform Overview Slide (`.slide.sf-platform`)
-
-**Referenz:** Slide 3 — "Snowflake: The AI Data Cloud"
-
-Dunkler Hintergrund, zentriertes Key-Visual, Snowflake als Plattform mit umgebenden Capability-Blöcken.
-
-```html
-<div class="slide sf-dark">
-    <div class="sf-slide-number">3</div>
-    
-    <div class="sf-content-area" style="align-items: center; text-align: center;">
-        <h1>[Snowflake: The AI Data Cloud]</h1>
-        
-        <!-- Zentrales Platform-Visual -->
-        <div class="sf-platform-visual">
-            <!-- Zentrale Box -->
-            <div class="sf-platform-core">
-                <div class="sf-platform-label">[BUSINESS]</div>
-                <div class="sf-platform-label">[TRANSFORMATION]</div>
-                <div class="sf-platform-label">[PLATFORM]</div>
-            </div>
-            
-            <!-- Umgebende Capability-Blöcke (Grid) -->
-            <div class="sf-capability-ring">
-                <div class="sf-capability">[Capability 1]</div>
-                <div class="sf-capability">[Capability 2]</div>
-                <div class="sf-capability">[Capability 3]</div>
-                <div class="sf-capability">[Capability 4]</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
-**CSS:**
-```css
-.sf-platform-visual {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    margin-top: 60px;
-}
-
-.sf-platform-core {
-    background: var(--sf-gradient-blue);
-    border-radius: 20px;
-    padding: 50px 80px;
-    text-align: center;
-}
-
-.sf-platform-label {
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--sf-white);
-    line-height: 1.3;
-}
-
-.sf-capability-ring {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.sf-capability {
-    background: var(--sf-white-10);
-    border: 1px solid var(--sf-border);
-    padding: 18px 32px;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--sf-white-80);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-```
-
----
-
-#### 4. Product Architecture Slide (`.slide.sf-architecture`)
-
-**Referenz:** Slide 4 — "Snowflake Cortex AI"
-
-Dunkler Hintergrund, Titel oben, gestapelte Produkt-Layer mit horizontaler Unterteilung.
-
-```html
-<div class="slide sf-dark">
-    <div class="sf-slide-number">4</div>
-    
-    <div class="sf-content-area">
-        <h1>[Snowflake AI is Easy, Efficient, and Trusted]</h1>
-        <div class="sf-product-badge">[SNOWFLAKE CORTEX AI]</div>
-        
-        <!-- Architecture Layers -->
-        <div class="sf-architecture-stack">
-            <!-- Top Layer: Split -->
-            <div class="sf-arch-row">
-                <div class="sf-arch-block sf-arch-primary">[UNSTRUCTURED]</div>
-                <div class="sf-arch-block sf-arch-primary">[STRUCTURED]</div>
-            </div>
-            
-            <!-- Product Blocks -->
-            <div class="sf-arch-row">
-                <div class="sf-arch-block">[Intelligence]</div>
-                <div class="sf-arch-block">[Doc AI]</div>
-                <div class="sf-arch-block">[Studio]</div>
-            </div>
-            
-            <!-- Agent Layer -->
-            <div class="sf-arch-row">
-                <div class="sf-arch-block sf-arch-wide">[CORTEX AGENTS]</div>
-            </div>
-            
-            <!-- Foundation Layer -->
-            <div class="sf-arch-row">
-                <div class="sf-arch-block sf-arch-foundation">[Governance]</div>
-                <div class="sf-arch-block sf-arch-foundation">[Guardrails]</div>
-                <div class="sf-arch-block sf-arch-foundation">[Observability]</div>
-            </div>
-            
-            <!-- Bottom Bar -->
-            <div class="sf-arch-row">
-                <div class="sf-arch-block sf-arch-wide sf-arch-base">[ORCHESTRATION]</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
-**CSS:**
-```css
-.sf-product-badge {
-    display: inline-block;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--sf-blue);
-    margin-bottom: 40px;
-    padding: 10px 0;
-    border-bottom: 2px solid var(--sf-blue);
-}
-
-.sf-architecture-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 40px;
-    max-width: 1200px;
-}
-
-.sf-arch-row {
-    display: flex;
-    gap: 8px;
-}
-
-.sf-arch-block {
-    flex: 1;
-    padding: 24px 30px;
-    background: var(--sf-white-10);
-    border: 1px solid var(--sf-border);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--sf-white-80);
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.sf-arch-block.sf-arch-primary {
-    background: var(--sf-gradient-blue);
-    color: var(--sf-white);
-    border: none;
-}
-
-.sf-arch-block.sf-arch-wide {
-    flex: 1 1 100%;
-}
-
-.sf-arch-block.sf-arch-foundation {
-    background: var(--sf-navy-light);
-    border: 1px solid var(--sf-border);
-    color: var(--sf-white-60);
-}
-
-.sf-arch-block.sf-arch-base {
-    background: var(--sf-navy-mid);
-    border: 1px solid rgba(41,181,232,0.3);
-    color: var(--sf-blue);
-}
-```
-
----
-
-#### 5. Three-Pillar Slide (`.slide.sf-pillars`)
-
-**Referenz:** Slide 5 — "Snowflake Powers the Connected Enterprise"
-
-Dunkler Hintergrund, drei gleichbreite Spalten mit Icon, Titel und Beschreibung. Klassischer "Trusted / Connected / Easy"-Aufbau.
-
-```html
-<div class="slide sf-dark">
-    <div class="sf-slide-number">5</div>
-    
-    <div class="sf-content-area" style="align-items: center;">
-        <h1>[Snowflake Powers the Connected Enterprise]</h1>
-        
-        <div class="sf-pillars">
-            <div class="sf-pillar">
-                <div class="sf-pillar-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1.5">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                </div>
-                <h3>[Trusted]</h3>
-                <p>[Interoperability of data, across clouds, with universal governance at scale]</p>
-            </div>
-            
-            <div class="sf-pillar">
-                <div class="sf-pillar-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1.5">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                </div>
-                <h3>[Connected]</h3>
-                <p>[Join, share and leverage data in a friction free ecosystem]</p>
-            </div>
-            
-            <div class="sf-pillar">
-                <div class="sf-pillar-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1.5">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                        <line x1="8" y1="21" x2="16" y2="21"/>
-                        <line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
-                </div>
-                <h3>[Easy]</h3>
-                <p>[Managed platform that adapts to your business and teams]</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
-**CSS:**
-```css
-.sf-pillars {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin-top: 80px;
-    max-width: 1400px;
-}
-
-.sf-pillar {
-    text-align: center;
-    padding: 40px 30px;
-}
-
-.sf-pillar-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--sf-white-06);
-    border-radius: 50%;
-    border: 1px solid var(--sf-border);
-}
-
-.sf-pillar h3 {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--sf-white);
-    margin-bottom: 20px;
-}
-
-.sf-pillar p {
-    font-size: 20px;
-    line-height: 1.6;
-    color: var(--sf-white-60);
-}
-```
-
----
-
-#### 6. Demo Transition Slide (`.slide.sf-demo`)
-
-**Referenz:** Slide 6 — "Demo"
-
-Dunkler Hintergrund, zentriertes "Demo" mit Play-Icon, minimalistisch.
-
-```html
-<div class="slide sf-dark" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-    
-    <!-- Play Icon -->
-    <div style="margin-bottom: 40px;">
-        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1" opacity="0.6">
-            <circle cx="12" cy="12" r="10"/>
-            <polygon points="10 8 16 12 10 16 10 8" fill="var(--sf-blue)" stroke="none"/>
-        </svg>
-    </div>
-    
-    <h1 style="font-size: 72px; font-weight: 300; letter-spacing: 8px; text-transform: uppercase; color: var(--sf-white);">Demo</h1>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
----
-
-#### 7. Closing / CTA Slide (`.slide.sf-closing`)
-
-**Referenz:** Slide 7 — "THERE IS NO AI STRATEGY WITHOUT A DATA STRATEGY"
-
-Dunkler Hintergrund, großer Statement oben, drei Aktionssäulen darunter.
-
-```html
-<div class="slide sf-dark">
-    <div class="sf-content-area" style="align-items: center; text-align: center;">
-        <!-- Big Statement -->
-        <div class="sf-closing-statement">
-            THERE IS NO AI STRATEGY WITHOUT<br>
-            <span style="color: var(--sf-blue);">A DATA STRATEGY</span>
-        </div>
-        
-        <!-- Three Action Pillars -->
-        <div class="sf-closing-pillars">
-            <div class="sf-closing-pillar">
-                <h3>[Strengthen Your Data Foundation]</h3>
-                <p>[For all data and workloads]</p>
-            </div>
-            <div class="sf-closing-pillar">
-                <h3>[Accelerate Enterprise AI]</h3>
-                <p>[For all users against enterprise data]</p>
-            </div>
-            <div class="sf-closing-pillar">
-                <h3>[Build & Distribute Applications]</h3>
-                <p>[With streamlined development, deployment, and distribution]</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="sf-footer-bar">
-        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    </div>
-</div>
-```
-
-**CSS:**
-```css
-.sf-closing-statement {
-    font-size: 48px;
-    font-weight: 800;
-    line-height: 1.3;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--sf-white);
-    margin-bottom: 80px;
-}
-
-.sf-closing-pillars {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    max-width: 1400px;
-}
-
-.sf-closing-pillar {
-    background: var(--sf-white-06);
-    border: 1px solid var(--sf-border);
-    border-top: 3px solid var(--sf-blue);
-    padding: 40px 30px;
-    text-align: center;
-}
-
-.sf-closing-pillar h3 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--sf-white);
-    margin-bottom: 15px;
-    line-height: 1.3;
-}
-
-.sf-closing-pillar p {
-    font-size: 18px;
-    color: var(--sf-white-60);
-    line-height: 1.5;
-}
-```
-
----
-
-### Corporate Footer-Bar (auf jeder Slide)
-
-```css
-.sf-footer-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 18px 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    color: var(--sf-white-40);
-    border-top: 1px solid var(--sf-border);
-}
-```
-
-Optional mit Snowflake-Logo rechts:
-```html
-<div class="sf-footer-bar">
-    <span>© 2025 Snowflake Inc. All Rights Reserved</span>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" 
-         alt="Snowflake" style="height: 20px; opacity: 0.4;">
-</div>
-```
-
----
-
-### Corporate-spezifische Regeln
-
-| Regel | Beschreibung |
-|-------|-------------|
-| **Alles dunkel** | Fast jede Slide hat `background: var(--sf-navy)`. Weiße Slides sind die Ausnahme, nicht die Regel. |
-| **Copyright auf JEDER Slide** | `© [Jahr] Snowflake Inc. All Rights Reserved` im Footer. |
-| **Keine Kunden-Logos** | Nur Snowflake-Branding. Kunden-Logos gehören in `custom`-Layout. |
-| **Slide-Nummern dezent** | Kleine Nummer oben-rechts (`sf-slide-number`), nicht im Footer. |
-| **Uppercase für Key Messages** | Kernaussagen in `text-transform: uppercase` + `letter-spacing`. |
-| **Light Blue als einzige Akzentfarbe** | `--sf-blue` (#29B5E8) ist die primäre Highlight-Farbe. Sparsam einsetzen. |
-| **Viel Negativraum** | Weniger Content pro Slide als im Custom-Layout. Wirken lassen. |
-| **Große Typografie** | Titel 48–96px, keine kleinen Fonts unter 18px. |
-| **Keine Box-Shadows** | Karten werden durch `border` und `background`-Kontrast abgegrenzt, nicht durch Schatten. |
-| **Keine border-radius > 0 auf Karten** | Eckige Karten wirken Corporate. Nur Runde Icons (`border-radius: 50%`). Ausnahme: Zentrale Platform-Boxen dürfen abgerundet sein. |
-| **Keine bunten Hintergründe** | Farbe kommt NUR über `border-top`, `border-left` oder Text-Farbe rein. |
-
-### Zusätzliche Corporate Slide-Typen (ergänzend)
-
-Über die 7 Referenz-Slides hinaus können folgende Typen im Corporate-Stil erstellt werden:
-
-| Slide-Typ | Basis-Klasse | Besonderheiten |
-|-----------|-------------|----------------|
-| **Content mit Bullets** | `.sf-dark` | Titel + 4-6 Bullet Points, große Font-Size (22px) |
-| **Split Content** | `.sf-dark` + `.sf-split` | 50/50 Split, links Text, rechts Visual/Diagramm |
-| **Statistics / KPI** | `.sf-dark` | Große Zahlen in `--sf-blue`, Beschreibung in `--sf-white-60` |
-| **Quote** | `.sf-dark` | Zitat zentriert, große italic Font, Quelle darunter |
-| **Timeline** | `.sf-dark` | Horizontale Timeline mit Light-Blue-Akzenten |
-| **Comparison** | `.sf-dark` | Tabelle mit `--sf-navy-light` Zeilen, `--sf-blue` Highlights |
-
-### Beispiel-Flow: Snowflake Intro
-
-```
-Slide 1: Title (SNOWFLAKE [THEMA])           → sf-title
-Slide 2: Statement (Provokante These)         → sf-dark + sf-key-statement
-Slide 3: Platform Overview (AI Data Cloud)    → sf-dark + sf-platform-visual
-Slide 4: Product Architecture (Cortex AI)     → sf-dark + sf-architecture-stack
-Slide 5: Three Pillars (Value Props)          → sf-dark + sf-pillars
-Slide 6: Demo Transition                      → sf-dark (minimalistisch)
-Slide 7: Closing CTA (Data Strategy)          → sf-dark + sf-closing
-```

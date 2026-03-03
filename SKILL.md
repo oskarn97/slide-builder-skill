@@ -33,23 +33,25 @@ Dieses Dokument enthält alle Slide-Typen, Design-Prinzipien, CSS-Regeln, Layout
 Kunde: @[Kundenordner]
 Sprache: [deutsch | englisch]
 Integration: [standalone | mit_demo]
-Layout: [custom | snowflake_corporate]
+Layout: [custom | ...]
 ```
 
 ## Layout-Optionen
 
 | Layout | Verwendung |
 |--------|-----------|
-| `custom` (Standard) | Kunden-CI, weiße Slides, individuelle Farben, Kunden- + Snowflake-Logo |
-| `snowflake_corporate` | Offizielles Snowflake-Design, dunkle Slides, nur Snowflake-Branding |
+| `custom` (Standard) | Kunden-CI, weiße Slides, individuelle Farben, Kunden- + Company-Logo |
+
+Weitere Layouts koennen ueber Addon-Dateien bereitgestellt werden (z.B. `snowflake_addon.md` fuer Snowflake Corporate Layout).
 
 ## Templates
 
 | Template | Pfad | Verwendung |
 |----------|------|-----------|
 | Slide Template (Custom) | `.cursor/skills/slide-builder/slide_template.html` | Kunden-Slides |
-| Slide Template (Corporate) | `.cursor/skills/slide-builder/slide_template_corporate.html` | Snowflake-Slides |
 | Talk Track Template | `.cursor/skills/slide-builder/talk_track_template.html` | Speaker Notes |
+
+Addon-spezifische Templates (z.B. `slide_template_corporate.html`) werden in der jeweiligen Addon-Datei dokumentiert.
 
 ## Output-Dateien
 
@@ -91,11 +93,20 @@ python .cursor/skills/slide-builder/export_pdf.py [Kunde]/slides/DEMO_FLOW.html
 - **TALK_TRACK.html (PFLICHT):** IMMER erstellen wenn Slides erstellt werden. Template: `talk_track_template.html`. Scanbar, Stichpunkte, keine Absätze. Demo-Slides inline mit konkreten Talking Points.
 - **DEMO_FLOW.html (PFLICHT bei Live-Demo):** IMMER erstellen wenn eine Demo Teil der Präsentation ist. Referenz: `Jungheinrich/slides/DEMO_FLOW.html`. Kompakt, SE-Perspektive: Zeigen → Business Value → Punkt machen.
 - **PDF-Export:** IMMER als letzter Schritt nach visueller Validierung — Slides, Talk Track UND Demo Flow
-- **KEIN Competitive Comparison:** "Why Snowflake vs. Databricks/Fabric"-Slides standardmäßig NICHT einbauen. Feature-Vergleichstabellen nur auf **explizite Anfrage** des Nutzers/AE. Das Template existiert in `slide_builder.md` (Slide Typ 8 + 14), wird aber NIE automatisch verwendet.
+- **KEIN Competitive Comparison:** Vergleichstabellen gegen Wettbewerber standardmaessig NICHT einbauen. Nur auf **explizite Anfrage** des Nutzers. Das Template existiert in `slide_builder.md` (Slide Typ 8 + 14), wird aber NIE automatisch verwendet.
 - **Storyline:** Problem → Impact → Solution (NICHT umgekehrt!)
-- **Requirements aufteilen:** Früh "Your Key Principles" (NUR Requirements), spät "How We Deliver" (Feature-Mapping)
+- **Requirements aufteilen:** Frueeh "Your Key Principles" (NUR Requirements), spaet "How We Deliver" (Feature-Mapping)
 - **Icons:** IMMER SVG, KEINE Emojis
-- **RAVEN_REPORT.md:** Falls vorhanden, als primäre Quelle für Slide-Inhalte verwenden
-- **Logos:** Snowflake-Logo immer von `upload.wikimedia.org`, Kunden-Logo von Wikimedia Commons (SVG bevorzugt)
+- **Logos:** Company-Logo + Kunden-Logo von Wikimedia Commons (SVG bevorzugt). Addon-Dateien koennen spezifische Logo-URLs bereitstellen.
 - **PDF-sicher:** Kein `linear-gradient` + `border` + `border-radius` kombinieren, `box-shadow` wird automatisch entfernt
-- **Höhe:** Default-CSS berücksichtigt Footer automatisch (`calc(1080px - 140px - 57px)`). Kein `margin-top: auto` auf Bottom-Bars verwenden.
+- **Hoehe:** Default-CSS beruecksichtigt Footer automatisch (`calc(1080px - 140px - 57px)`). Kein `margin-top: auto` auf Bottom-Bars verwenden.
+
+## Addons
+
+Plattform-spezifische Erweiterungen werden ueber Addon-Dateien bereitgestellt:
+
+| Addon | Datei | Inhalt |
+|-------|-------|--------|
+| Snowflake | `snowflake_addon.md` | Corporate Layout, Logo-URLs, Raven Report Integration, Kosten-Messaging |
+
+Bei Snowflake-Praesentationen: **Zusaetzlich** `snowflake_addon.md` lesen fuer plattformspezifische Regeln, Templates und Slide-Typen.
