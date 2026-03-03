@@ -1186,6 +1186,28 @@ Für **Partner- oder Migrations-Szenarien** mit strukturierten Feldern und konkr
 
 ---
 
+## Content Density: Maximale Inhalte pro Slide-Typ
+
+Zu viel Content auf einer Slide erzeugt Overflow, Leerflächen-Probleme oder unlesbaren Text. Diese Limits gelten als Obergrenze — bei Überschreitung auf zwei Slides aufteilen statt Content zu quetschen.
+
+| Slide-Typ | Maximale Inhalte | Typisches Problem bei Überschreitung |
+|---|---|---|
+| **Title Slide** | 1 Haupttitel + 1 Untertitel + optionale Tagline + Logos | — |
+| **Content Slide** | 1 Titel + 4–6 Bullet Points ODER 1 Titel + 2 Absätze | Text zu klein oder Bullets abgeschnitten |
+| **Card Grid** | 1 Titel + max 6 Karten (2×3 oder 3×2) | Karten zu klein, kein Platz für Hero-KPIs |
+| **Architecture Diagram** | 3 Ebenen (Sources → Platform → Consumers) + max 1 Bottom-Bar | Pfeile/Labels unleserlich, Footer-Overlap |
+| **Vergleichs-Tabelle** | 1 Titel + max 7 Zeilen + 1 Bottom-Bar | Zeilen zu eng, Footer-Overlap |
+| **Timeline/Roadmap** | 1 Titel + max 4 Phasen + 1 Bottom-Bar | Phasen-Karten zu schmal |
+| **Quote Slide** | 1 Zitat (max 3 Zeilen) + Attribution | — |
+
+**Regeln:**
+1. **Überschreitung → aufteilen**, nicht quetschen. Lieber "Teil 1/2" als unlesbaren Content.
+2. Jeder Bullet Point sollte max 1–2 Zeilen lang sein.
+3. Architecture-Slides mit mehr als 3 Ebenen + Bottom-Bar sind fast immer zu voll.
+4. Card Grids: Jede Karte braucht genug Platz für Icon + Titel + Beschreibung + Hero-KPI. Bei 4+ Karten mit KPIs wird es eng.
+
+---
+
 ## ⚠️ KRITISCH: Slide-Content Höhenberechnung
 
 ### Das Problem (gelöst)
@@ -1214,6 +1236,39 @@ Damit ist **kein inline-Override** mehr nötig, um Footer-Overlap zu vermeiden. 
 ### Anti-Pattern: `margin-top: auto` auf Bottom-Bars
 
 Verwende **kein** `margin-top: auto` auf Bottom-Bars innerhalb von `.slide-content`. Es drückt Elemente an den unteren Rand des Content-Containers — bei falscher Höhe direkt hinter den Footer. Stattdessen festen `margin-top` verwenden (z.B. `margin-top: 28px`).
+
+### Anti-Pattern: `justify-content: space-between` drückt Bottom-Bar in den Footer
+
+Bei vertikalen Flex-Layouts mit `justify-content: space-between` wird das letzte Element (z.B. eine Vorteil/Beachten-Bar) an den unteren Rand des Content-Containers gedrückt. Wenn der Content die volle Höhe nutzt, landet die Bottom-Bar **direkt auf der Footer-Linie** — weniger als die geforderten 20px Abstand.
+
+```html
+<!-- ❌ SCHLECHT: space-between drückt Bottom-Bar bis zum Footer -->
+<div class="slide-content" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <!-- Content-Elemente ... -->
+    <div>Vorteil/Beachten Bar</div>  <!-- → klebt am Footer -->
+</div>
+
+<!-- ✅ GUT: gap steuert den Abstand, padding-bottom schützt den Footer -->
+<div class="slide-content" style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 16px;">
+    <!-- Content-Elemente ... -->
+    <div style="margin-top: auto;">Vorteil/Beachten Bar</div>
+</div>
+```
+
+**Warum ist das besonders bei Architecture-Slides gefährlich?** Diese Slides haben viele vertikale Elemente (Consumer Row → Pfeile → Platform Row → Pfeile → Source Row → Bottom-Bar) und nutzen fast die volle Höhe aus. `space-between` verteilt den Restplatz gleichmäßig — aber wenn wenig Restplatz vorhanden ist, drückt es die Bottom-Bar bis zum Footer-Rand.
+
+### Overflow-Schutz: `overflow: hidden` auf `.slide-content`
+
+`.slide-content` (bzw. `.sf-content-area` im Corporate-Template) hat `overflow: hidden` gesetzt. Das verhindert, dass zu langer Content über die Slide-Grenzen hinaus rendert und in den Footer oder die nächste Slide überläuft.
+
+```css
+.slide-content {
+    /* ... padding, height ... */
+    overflow: hidden;
+}
+```
+
+**Warum?** Bei fixen 1920×1080px-Slides gibt es keinen Scrollbar — überlaufender Content wäre unsichtbar im PDF und im Browser nur als Layoutbruch sichtbar. `overflow: hidden` schneidet Content sauber ab. Wenn Content abgeschnitten wird, ist das ein Signal, dass die Slide zu voll ist → Content Density Rules prüfen und ggf. auf zwei Slides aufteilen.
 
 ### Flex-Layout: Karten in Spalten
 
@@ -1809,25 +1864,34 @@ Das Script erkennt automatisch ob eine `.html`-Datei Slides oder ein Dokument en
 
 ```
 1. python export_pdf.py [Kunde]/slides/[name]_slides.html --preview-only
-2. Read-Tool auf jede _slide_previews/slide_*.jpg anwenden
-3. Prüf-Checkliste durchgehen (siehe unten)
+2. Read-Tool auf JEDE _slide_previews/slide_*.jpg anwenden
+3. Pro Slide die Prüf-Checkliste durchgehen und JEDES Finding dokumentieren
 4. Bei Problemen: HTML fixen → Schritt 1 wiederholen
 5. Wenn alle Slides OK: PDF exportieren (ohne --preview-only)
 ```
 
-### Prüf-Checkliste
+> **⛔ KEIN Rubber-Stamping!** Der Agent darf NICHT einfach "sieht gut aus" sagen.
+> Er MUSS pro Slide mindestens die kritischen Prüfpunkte (Footer-Spacing, Leerflächen,
+> Proportionen) explizit kommentieren — auch wenn kein Problem vorliegt.
+> Beispiel: "Slide 5: Footer-Abstand OK (~30px), Snowflake-Box füllt Platz, Pfeile lesbar."
 
-| Was prüfen | Worauf achten |
-|------------|---------------|
-| **⛔ Footer-Overlap** | **KRITISCH:** Ragt das unterste Content-Element (Key Statement, letzte Karte, Bottom-Bar) in den Footer? Mindestens **20px sichtbarer Abstand** zwischen letztem Content und Footer-Linie. Dies ist der häufigste Fehler — bei JEDER Slide prüfen! |
-| **Logos** | Laden sie? Sichtbar auf dem Hintergrund? Invertierung korrekt auf dunklen Slides? |
-| **Text-Overflow** | Bricht Text aus Boxen aus? Unerwünschtes Wrapping in Karten? |
-| **Spacing** | Füllt der Content die Slide oder gibt es große Leerflächen? Ist die Slide "zu luftig"? |
-| **Font-Größen** | Sind Titel/Subtitel auf Beamer aus 3m lesbar? Nicht unter 15px auf 1920px Slides? |
-| **Farben/Kontrast** | Sind Elemente auf dunklem/hellem Hintergrund sichtbar? Genug Kontrast? De-Emphasis-Text mindestens `white-60` (nicht `white-40` — zu blass für Beamer). |
-| **Icon-Größen** | Inline-Status-Icons (Checkmarks, X-Icons) mindestens **20px** — bei 16px sind sie auf Beamer kaum erkennbar. |
-| **Alignment** | Sind Spalten/Karten bündig? Gleiche Höhen bei nebeneinander liegenden Elementen? |
-| **Vollständigkeit** | Alle geplanten Inhalte vorhanden? Footer-Text korrekt? Slide-Nummern stimmen? |
+### Prüf-Checkliste (pro Slide durchgehen)
+
+| # | Was prüfen | Worauf achten | Pflicht-Kommentar? |
+|---|------------|---------------|-------------------|
+| 1 | **⛔ Footer-Spacing** | **KRITISCH:** Mindestens **20px sichtbarer Abstand** zwischen letztem Content-Element und Footer-Linie. Häufigster Fehler — bei JEDER Slide prüfen! Besonders bei Architecture-Slides mit Bottom-Bars. | **Ja — immer** |
+| 2 | **Leerflächen & Proportionen** | Füllt der Content die Slide sinnvoll (~75%)? Gibt es große leere Flächen in Boxen? Sind Elemente proportional zueinander? Sind Pfeile/Icons groß genug um lesbar zu sein? | **Ja — immer** |
+| 3 | **Logos** | Laden sie? Sichtbar auf dem Hintergrund? Invertierung korrekt auf dunklen Slides? | Nur bei Findings |
+| 4 | **Text-Overflow** | Bricht Text aus Boxen aus? Unerwünschtes Wrapping in Karten? | Nur bei Findings |
+| 5 | **Font-Größen** | Sind Titel/Subtitel auf Beamer aus 3m lesbar? Nicht unter 15px auf 1920px Slides? | Nur bei Findings |
+| 6 | **Farben/Kontrast** | Sind Elemente auf dunklem/hellem Hintergrund sichtbar? De-Emphasis-Text mindestens `white-60`. | Nur bei Findings |
+| 7 | **Icon-Größen** | Inline-Icons mindestens **20px**, Pfeile zwischen Elementen mindestens **28px** mit Stroke ≥ 2px. | Nur bei Findings |
+| 8 | **Alignment** | Sind Spalten/Karten bündig? Gleiche Höhen bei nebeneinander liegenden Elementen? | Nur bei Findings |
+| 9 | **Vollständigkeit** | Alle geplanten Inhalte vorhanden? Footer-Text korrekt? Slide-Nummern stimmen? | Nur bei Findings |
+
+> **Hinweis:** Der `#slide-indicator` (die "X / 11" Navigations-Pill) wird in Previews automatisch
+> ausgeblendet, damit die Previews die PDF-Darstellung korrekt abbilden. Falls die Pill trotzdem
+> erscheint: `export_pdf.py` aktualisieren.
 
 ### ⛔ Footer-Overlap vermeiden (häufigster Fehler)
 

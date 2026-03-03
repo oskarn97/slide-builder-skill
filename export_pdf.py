@@ -201,6 +201,8 @@ def capture_slide_previews(page, html_file: Path, verbose: bool = False) -> tupl
         shutil.rmtree(preview_dir)
     preview_dir.mkdir()
 
+    page.evaluate("document.getElementById('slide-indicator')?.remove()")
+
     slides = page.locator(".slide")
     count = slides.count()
 
