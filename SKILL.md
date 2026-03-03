@@ -63,6 +63,8 @@ Layout: [custom | snowflake_corporate]
 > **KEIN PDF-Export ohne vorherige visuelle Validierung!**
 > Der Agent MUSS Slide-Previews generieren, visuell prüfen und Probleme fixen, BEVOR die PDF exportiert wird.
 
+Dependencies (Python venv, Playwright, Chromium, Node modules) werden beim ersten Aufruf automatisch installiert.
+
 ```bash
 # 1. Previews generieren (kein PDF)
 python .cursor/skills/slide-builder/export_pdf.py [Kunde]/slides/[name]_slides.html --preview-only

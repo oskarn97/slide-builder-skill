@@ -10,46 +10,36 @@ AI-gestützter Cursor Skill zur Erstellung professioneller HTML-Slides (16:9), T
 - **Demo Flow** — Kompakter Spickzettel für Live-Demos
 - **PDF-Export** — Automatisch via Playwright/Chromium (Slides 16:9, Talk Track/Demo Flow A4)
 - **Visuelle Validierung** — JPEG-Previews vor PDF-Export zur Qualitätskontrolle
+- **Auto-Setup** — Dependencies werden beim ersten Aufruf automatisch installiert
 
 ## Prerequisites
 
 - **Python >= 3.11**
-- **Node.js >= 18**
-- **Cursor IDE**
+- **Node.js >= 18** (optional, für PPTX-Export)
 
 ## Installation
 
-### 1. Repo klonen
+### 1. In den Cursor Workspace einbinden
 
 ```bash
-git clone git@github.com:oskarn97/slide-builder-skill.git
-```
-
-### 2. In den Cursor Workspace einbinden
-
-Den Skill-Ordner nach `.cursor/skills/slide-builder/` im Workspace kopieren oder verlinken:
-
-```bash
-# Option A: Symlink (empfohlen — bleibt mit dem Repo synchron)
-ln -s /pfad/zu/slide-builder-skill <workspace>/.cursor/skills/slide-builder
-
-# Option B: Direkt klonen
+# Option A: Direkt klonen (empfohlen)
 git clone git@github.com:oskarn97/slide-builder-skill.git <workspace>/.cursor/skills/slide-builder
+
+# Option B: Separat klonen und verlinken
+git clone git@github.com:oskarn97/slide-builder-skill.git ~/slide-builder-skill
+ln -s ~/slide-builder-skill <workspace>/.cursor/skills/slide-builder
 ```
 
-### 3. Dependencies installieren
+Das war's. Beim ersten `export_pdf.py`-Aufruf werden automatisch installiert:
+- Python venv mit `playwright` und `markdown`
+- Chromium Browser (headless, für PDF-Rendering)
+- Node modules (`dom-to-pptx`, für optionalen PPTX-Export)
+
+### Update
 
 ```bash
 cd <workspace>/.cursor/skills/slide-builder
-
-# Python
-python3 -m venv .venv
-source .venv/bin/activate
-pip install playwright markdown
-playwright install chromium
-
-# Node
-npm install
+git pull
 ```
 
 ## Verwendung in Cursor
@@ -80,7 +70,7 @@ python .cursor/skills/slide-builder/export_pdf.py slides.html
 slide-builder/
 ├── SKILL.md                         ← Cursor Skill Entry Point
 ├── slide_builder.md                 ← Vollständige Anleitung (Slide-Typen, CSS, Layouts)
-├── export_pdf.py                    ← PDF/Preview-Export (Playwright/Chromium)
+├── export_pdf.py                    ← PDF/Preview-Export (auto-installiert Dependencies)
 ├── export_pptx.js                   ← PPTX-Export (optional)
 ├── slide_template.html              ← HTML-Template: Custom Layout
 ├── slide_template_corporate.html    ← HTML-Template: Snowflake Corporate Layout

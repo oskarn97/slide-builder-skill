@@ -47,19 +47,62 @@ Verwendung:
 """
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-try:
-    from playwright.sync_api import sync_playwright
-except ImportError:
-    print("ERROR: playwright ist nicht installiert.")
-    print("       Bitte installieren mit:")
-    print("         pip install playwright")
-    print("         playwright install chromium")
-    sys.exit(1)
+SKILL_DIR = Path(__file__).resolve().parent
+VENV_DIR = SKILL_DIR / ".venv"
+VENV_PYTHON = VENV_DIR / "bin" / "python"
+
+
+def _ensure_venv():
+    """Bootstrap: venv + Python-Dependencies automatisch installieren."""
+    if VENV_DIR.exists() and VENV_PYTHON.exists():
+        return
+
+    print(f"[slide-builder] Erstelle Python venv in {VENV_DIR} ...")
+    subprocess.run([sys.executable, "-m", "venv", str(VENV_DIR)], check=True)
+    subprocess.run(
+        [str(VENV_PYTHON), "-m", "pip", "install", "--quiet", "playwright", "markdown"],
+        check=True,
+    )
+    subprocess.run(
+        [str(VENV_PYTHON), "-m", "playwright", "install", "chromium"],
+        check=True,
+    )
+    print("[slide-builder] Python-Dependencies + Chromium installiert.")
+
+
+def _ensure_node_modules():
+    """Bootstrap: Node-Dependencies automatisch installieren."""
+    node_modules = SKILL_DIR / "node_modules"
+    if node_modules.exists():
+        return
+
+    if not shutil.which("npm"):
+        return
+
+    print("[slide-builder] Installiere Node-Dependencies ...")
+    subprocess.run(["npm", "install", "--silent"], cwd=str(SKILL_DIR), check=True)
+    print("[slide-builder] Node-Dependencies installiert.")
+
+
+def _reexec_in_venv():
+    """Falls wir nicht im Skill-venv laufen, Dependencies sicherstellen und im venv neu starten."""
+    if sys.prefix == str(VENV_DIR):
+        return
+
+    _ensure_venv()
+    _ensure_node_modules()
+    os.execv(str(VENV_PYTHON), [str(VENV_PYTHON), __file__] + sys.argv[1:])
+
+
+_reexec_in_venv()
+
+from playwright.sync_api import sync_playwright
 
 
 # ─── Slide Export (16:9) ────────────────────────────────────────────────────────
