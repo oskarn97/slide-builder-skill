@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!-- KUNDE --> – Talk Track</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /*
+         * ══════════════════════════════════════════════════════════════
+         * TALK TRACK HTML TEMPLATE — Neutral & Clean
+         * ══════════════════════════════════════════════════════════════
+         *
+         * Standard-Template für alle Talk Tracks im Demo Builder.
+         * Erzeugt saubere, kopierbare PDFs über export_pdf.py oder
+         * den "PDF exportieren"-Button im Browser.
+         *
+         * DESIGN-PRINZIP: Hochwertig, neutral, wenig Farbe.
+         *   - Blöcke unterscheiden sich primär durch border-left-Farbe
+         *   - Hintergründe sind fast weiß (subtile Grautöne)
+         *   - Labels sind klein und zurückhaltend
+         *   - Nur Rückfrage (amber) und Warn (rot) haben erkennbare Farbe
+         *   - Abgerundete Ecken: maximal 3px
+         *
+         * ANPASSUNG PRO KUNDE:
+         *   1. --accent: Hauptakzent (Standard: Slate)
+         *   2. Titel in <title> und <h1> ersetzen
+         *   3. Inhalte in die Block-Struktur einfügen (siehe unten)
+         *
+         * INHALTSPRINZIP: Seller-Perspektive im Termin.
+         *   Der Talk Track liegt vor dem Presenter (Tablet/Print).
+         *   Er muss SCANBAR sein, nicht lesbar. Konkret:
+         *   - Talking Points = kurze Stichpunkte, kein Fließtext
+         *   - Formulierung = NUR die Kern-Phrase fett, Rest als Stichpunkt
+         *   - KEINE Klickpfade (gehören in Rehearsal-Prep, nicht Meeting)
+         *   - KEINE Transition-Blöcke (der Presenter sieht die nächste Slide)
+         *   - Erwartbare Fragen + Antworten INLINE bei der jeweiligen Slide
+         *   - Kontext-Header ganz oben: Teilnehmer, Ziel, CTA
+         *
+         * BLOCK-TYPEN (verwende diese konsistent):
+         *   .block-talk          → Talking Points / "Was zeigen & Punkt machen"
+         *   .block-formulierung  → Kern-Phrasen: NUR den Kernsatz fett,
+         *                          Rest als kurzer Stichpunkt dahinter
+         *   .block-rueckfrage    → Fragen an den Kunden (optional, terminabhängig)
+         *   .block-key           → Key Messages + Erwartbare Fragen (visuell prominent)
+         *   .block-warn          → Warnungen / Dont's (dezent rot)
+         *
+         * NICHT MEHR VERWENDEN:
+         *   .block-transition    → Entfernt. Übergänge sind implizit.
+         *
+         * LABELS (als <span class="label label-xxx"> über dem Block):
+         *   .label-talk, .label-formulierung, .label-rueckfrage,
+         *   .label-key, .label-warn
+         *
+         * HINWEISE:
+         *   - "Formulierung" statt "Say" → deutsche Talk Tracks
+         *   - "Rückfrage" statt "Discovery" → passt für alle Termintypen
+         *   - Rückfrage-Blöcke sind OPTIONAL -- nicht jede Slide braucht eine
+         *   - Erwartbare Fragen mit Q&A-Format direkt bei der Slide:
+         *     <p class="qa-item"><span class="q">Frage</span> <span class="a">→ Antwort</span></p>
+         *
+         * KONTEXT-HEADER (ganz oben, nach dem Titel):
+         *   .context-box         → Grid mit Teilnehmern, Ziel, CTA
+         *   .ctx-item            → Ein Feld im Grid
+         *   .ctx-item.full       → Feld über volle Breite
+         *   .ctx-label           → Überschrift des Feldes
+         *   .ctx-value           → Wert
+         *
+         * SPEZIAL-ELEMENTE:
+         *   .demo-step         → Demo-Schritte mit Rollen und Ergebnissen
+         *   .demo-step .role   → SQL-Rolle (monospace, dunkel)
+         *   .demo-step .result → Ergebnis (.full=grün, .partial=amber, .masked=rot)
+         *   .qa-item           → Frage+Antwort-Paar (inline bei der Slide)
+         *   .rules-grid        → 2-Spalten-Grid für Regeln/Hinweise
+         *   .rule-card         → Einzelne Regel mit Nummer
+         *
+         * PDF-EXPORT:
+         *   - Browser: "PDF exportieren"-Button unten rechts
+         *   - CLI: python export_pdf.py slides/TALK_TRACK.html
+         *   - export_pdf.py erkennt automatisch: kein <div class="slide"> → A4
+         * ══════════════════════════════════════════════════════════════
+         */
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            /* ── Einzige Anpassung pro Kunde ── */
+            --accent: #475569;              /* Hauptakzent (Slate) */
+
+            /* ── Standard (nicht ändern) ── */
+            --text-dark: #1a1a2e;
+            --text-body: #334155;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --bg-page: #ffffff;
+            --bg-card: #f9fafb;
+            --bg-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+        }
+
+        html { font-size: 16px; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-body);
+            background: var(--bg-page);
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 50px 80px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Print ── */
+        @media print {
+            body {
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+                font-size: 11pt;
+                line-height: 1.6;
+                color: #000;
+            }
+            .slide-section { page-break-inside: avoid; break-inside: avoid; }
+            .slide-section.long { page-break-inside: auto; break-inside: auto; }
+            h2 { page-break-after: avoid; break-after: avoid; }
+            .appendix { page-break-before: always; break-before: page; }
+            .no-print { display: none !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+        @page { size: A4; margin: 2cm 2.2cm; }
+
+        /* ── Typography ── */
+        h1 {
+            font-size: 2rem; font-weight: 800; color: var(--text-dark);
+            margin-bottom: 8px; letter-spacing: -0.5px;
+        }
+        h1 .accent { color: var(--accent); }
+
+        .doc-subtitle {
+            font-size: 1.1rem; color: var(--text-light);
+            margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border);
+        }
+
+        /* ── Context box (Teilnehmer, Ziel, CTA) ── */
+        .context-box {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+            margin-bottom: 32px; border: 1px solid var(--border); border-radius: 3px;
+            font-size: 0.9rem;
+        }
+        .context-box .ctx-item {
+            padding: 10px 16px; border-bottom: 1px solid var(--border);
+        }
+        .context-box .ctx-item:nth-last-child(-n+2) { border-bottom: none; }
+        .context-box .ctx-item:nth-child(odd) { border-right: 1px solid var(--border); }
+        .context-box .ctx-label {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 2px;
+        }
+        .context-box .ctx-value { color: var(--text-dark); font-weight: 500; }
+        .context-box .ctx-item.full { grid-column: 1 / -1; border-right: none; }
+
+        /* ── Inline Q&A ── */
+        .qa-item { margin: 4px 0; font-size: 0.9rem; line-height: 1.5; }
+        .qa-item .q { font-weight: 600; color: var(--text-dark); }
+        .qa-item .a { color: var(--text-body); }
+
+        h2 {
+            font-size: 1.35rem; font-weight: 700; color: var(--text-dark);
+            margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border);
+            display: flex; align-items: baseline; gap: 12px;
+        }
+        h2 .time {
+            font-size: 0.85rem; font-weight: 500; color: var(--text-muted);
+            background: var(--bg-card); padding: 2px 10px; border-radius: 3px;
+            margin-left: auto; white-space: nowrap;
+        }
+
+        h3 {
+            font-size: 1.1rem; font-weight: 700; color: var(--text-dark);
+            margin: 24px 0 10px;
+        }
+
+        p, li { margin-bottom: 8px; }
+        ul, ol { margin: 8px 0 16px 24px; }
+        li { padding-left: 4px; }
+        strong { color: var(--text-dark); font-weight: 600; }
+
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.88em; background: var(--bg-subtle); padding: 2px 6px;
+            border-radius: 2px; color: #475569;
+        }
+
+        /* ── Labels ── */
+        .label {
+            display: inline-block; font-size: 0.72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+            padding: 2px 8px; border-radius: 2px; margin-bottom: 6px;
+            color: var(--text-muted); background: var(--bg-subtle);
+        }
+        .label-talk       { color: #475569; }
+        .label-formulierung { color: #475569; background: #f0f4f0; }
+        .label-rueckfrage  { color: #92400e; background: #fefce8; }
+        /* .label-transition entfernt — Transitions werden nicht mehr als eigene Blöcke verwendet */
+        .label-key         { color: #1e293b; background: #e2e8f0; }
+        .label-warn        { color: #991b1b; background: #fef2f2; }
+
+        /* ── Blocks ── */
+        .block {
+            margin: 12px 0; padding: 14px 18px;
+            border-radius: 3px; border-left: 3px solid;
+        }
+        .block-talk       { background: var(--bg-card); border-color: var(--border-strong); }
+        .block-formulierung { background: #fafcfa; border-color: #94a3b8; }
+        .block-rueckfrage  { background: #fefef8; border-color: #d4a017; }
+        /* .block-transition entfernt — Transitions werden nicht mehr als eigene Blöcke verwendet */
+        .block-key         { background: #f8f9fb; border-color: var(--text-dark); border-left-width: 4px; }
+        .block-warn        { background: #fefafa; border-color: #b91c1c; }
+        .block p { margin-bottom: 4px; }
+        .block p:last-child { margin-bottom: 0; }
+
+        /* ── Table ── */
+        table {
+            width: 100%; border-collapse: collapse;
+            margin: 16px 0 24px; font-size: 0.95rem;
+        }
+        th {
+            text-align: left; padding: 10px 14px;
+            background: var(--text-dark); color: white;
+            font-weight: 600; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        th:first-child { border-radius: 2px 0 0 0; }
+        th:last-child { border-radius: 0 2px 0 0; }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        tr:last-child td { border-bottom: none; }
+        tr.highlight td { font-weight: 600; background: var(--bg-card); }
+        tr.total td { font-weight: 700; background: var(--bg-card); border-top: 2px solid var(--text-dark); }
+
+        /* ── Demo Steps ── */
+        .demo-step {
+            margin: 10px 0; padding: 10px 16px;
+            background: var(--bg-card); border-radius: 2px; border: 1px solid var(--border);
+        }
+        .demo-step .role {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.85em; color: var(--text-dark); font-weight: 600;
+        }
+        .demo-step .result { font-weight: 600; margin-left: 8px; }
+        .demo-step .result.full    { color: #4a7c59; }
+        .demo-step .result.partial { color: #92400e; }
+        .demo-step .result.masked  { color: #991b1b; }
+
+        /* ── Rules Grid ── */
+        .rules-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0;
+        }
+        @media (max-width: 700px) { .rules-grid { grid-template-columns: 1fr; } }
+        @media print { .rules-grid { grid-template-columns: 1fr 1fr; } }
+        .rule-card {
+            padding: 14px 16px; background: var(--bg-card);
+            border-radius: 2px; border: 1px solid var(--border);
+        }
+        .rule-card .num {
+            display: inline-block; width: 22px; height: 22px;
+            background: var(--text-dark); color: white; border-radius: 2px;
+            text-align: center; font-size: 0.75rem; font-weight: 700;
+            line-height: 22px; margin-right: 8px;
+        }
+        .rule-card .title { font-weight: 700; color: var(--text-dark); }
+
+        /* ── Misc ── */
+        hr { border: none; height: 1px; background: var(--border); margin: 32px 0; }
+
+        .print-btn {
+            position: fixed; bottom: 24px; right: 24px;
+            background: var(--text-dark); color: white; border: none;
+            padding: 10px 22px; border-radius: 3px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: opacity 0.15s; z-index: 100;
+        }
+        .print-btn:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">PDF exportieren</button>
+
+<!--
+ ══════════════════════════════════════════════════════════════════
+ ANLEITUNG: Dieses Template als Vorlage für neue Talk Tracks nutzen.
+
+ GRUNDPRINZIP: Der Talk Track ist ein SPICKZETTEL im Termin.
+ Er muss SCANBAR sein, nicht lesbar. Der Presenter guckt drauf,
+ nimmt die Kern-Phrase auf, spricht frei.
+
+ STRUKTUR:
+   1. <h1> + .doc-subtitle       → Titel
+   2. .context-box               → Teilnehmer, Ziel, CTA (NEU)
+   3. <table>                     → Zeitliche Übersicht
+   4. <div class="slide-section"> → Pro Slide ein Abschnitt mit:
+      - <h2> mit <span class="time">
+      - .block-talk          → Talking Points (kurze Stichpunkte)
+      - .block-formulierung  → Kern-Phrase FETT + kurzer Stichpunkt
+      - .block-rueckfrage    → Fragen an den Kunden (optional)
+      - .block-key           → Key Messages + Erwartbare Fragen (Q&A)
+      - .block-warn          → Warnungen / Don'ts
+      - .demo-step           → Demo-Schritte (bei Live-Demo)
+   5. .appendix                   → "Vor dem Termin lesen" (Regeln, Hinweise)
+
+ WAS NICHT REIN GEHÖRT:
+   - Transition-Blöcke (Presenter sieht die nächste Slide)
+   - Klickpfade (gehören in Rehearsal-Prep, nicht Meeting)
+   - Lange Fließtexte zum Ablesen
+   - Q&A-Sammlung am Ende (stattdessen inline bei der Slide)
+
+ ELEMENTE REFERENZ:
+
+ Talking Points:
+   <div class="block block-talk">
+       <span class="label label-talk">Talking Points</span>
+       <ul><li><strong>Kern</strong> – kurzer Stichpunkt</li></ul>
+   </div>
+
+ Kern-Phrase (NICHT ganzer Absatz, nur den Kernsatz fett):
+   <div class="block block-formulierung">
+       <span class="label label-formulierung">Kern-Phrase</span>
+       <p><strong>„Gleiche Tabelle, gleiche Query – jede Rolle sieht nur das Erlaubte"</strong>
+          – Governance propagiert sich zu Copilot</p>
+   </div>
+
+ Rückfrage (optional):
+   <div class="block block-rueckfrage">
+       <span class="label label-rueckfrage">R&uuml;ckfrage</span>
+       <p>Kurze Frage an den Kunden?</p>
+   </div>
+
+ Key Messages / Erwartbare Fragen:
+   <div class="block block-key">
+       <span class="label label-key">Key Messages</span>
+       <ul><li><strong>Punkt 1</strong></li></ul>
+   </div>
+   <div class="block block-key">
+       <span class="label label-key">Erwartbare Fragen</span>
+       <p class="qa-item"><span class="q">„Frage?"</span> <span class="a">→ Antwort.</span></p>
+   </div>
+
+ Warnung:
+   <div class="block block-warn">
+       <span class="label label-warn">Wichtig</span>
+       <p>Kurze Warnung.</p>
+   </div>
+
+ Demo-Schritt:
+   <div class="demo-step">
+       <span class="role">USE ROLE XYZ;</span> &gt; <code>SELECT ...</code>
+       <br><span class="result full">&rarr; Volles Ergebnis</span>
+   </div>
+
+ Kontext-Header:
+   <div class="context-box">
+       <div class="ctx-item">
+           <div class="ctx-label">Teilnehmer (Kunde)</div>
+           <div class="ctx-value">Name (Rolle)</div>
+       </div>
+       <div class="ctx-item full">
+           <div class="ctx-label">Gewünschtes Outcome / CTA</div>
+           <div class="ctx-value">...</div>
+       </div>
+   </div>
+ ══════════════════════════════════════════════════════════════════
+-->
+
+<!-- ═══════ HEADER ═══════ -->
+<h1><!-- KUNDE --> <span class="accent"><!-- THEMA --></span></h1>
+<div class="doc-subtitle">Talk Track &mdash; <!-- KONTEXT --> &bull; <!-- DAUER --></div>
+
+<!-- ═══════ KONTEXT ═══════ -->
+<div class="context-box">
+    <div class="ctx-item">
+        <div class="ctx-label">Teilnehmer (Kunde)</div>
+        <div class="ctx-value"><!-- NAMEN + ROLLEN --></div>
+    </div>
+    <div class="ctx-item">
+        <div class="ctx-label">Teilnehmer (Snowflake)</div>
+        <div class="ctx-value"><!-- NAMEN --></div>
+    </div>
+    <div class="ctx-item">
+        <div class="ctx-label">Letzter Termin</div>
+        <div class="ctx-value"><!-- DATUM + KURZZUSAMMENFASSUNG --></div>
+    </div>
+    <div class="ctx-item">
+        <div class="ctx-label">Ziel dieses Termins</div>
+        <div class="ctx-value"><!-- EIN SATZ --></div>
+    </div>
+    <div class="ctx-item full">
+        <div class="ctx-label">Gew&uuml;nschtes Outcome / CTA</div>
+        <div class="ctx-value"><!-- KONKRETER NEXT STEP --></div>
+    </div>
+</div>
+
+<!-- ═══════ ZEITLICHE ÜBERSICHT ═══════ -->
+<table>
+    <thead>
+        <tr><th>Phase</th><th>Slide</th><th>Dauer</th><th>Inhalt</th></tr>
+    </thead>
+    <tbody>
+        <!-- Zeilen hier einfügen -->
+        <!-- <tr><td>Opening</td><td>1</td><td>1 min</td><td>Titel</td></tr> -->
+        <!-- <tr class="highlight"><td><strong>Live Demo</strong></td><td><strong>5</strong></td><td><strong>10 min</strong></td><td><strong>Demo</strong></td></tr> -->
+        <!-- <tr class="total"><td>Gesamt</td><td>N</td><td>~X min</td><td></td></tr> -->
+    </tbody>
+</table>
+
+<!-- ═══════ SLIDES ═══════ -->
+
+<!-- Pro Slide einen .slide-section Block erstellen: -->
+<!--
+<div class="slide-section">
+<h2>Slide N: Titel <span class="time">MM:SS</span></h2>
+
+<div class="block block-talk">
+    <span class="label label-talk">Talking Points</span>
+    <ul>
+        <li><strong>Kernaussage</strong> &ndash; Details</li>
+    </ul>
+</div>
+
+<div class="block block-discovery">
+    <span class="label label-discovery">Discovery</span>
+    <p>Frage?</p>
+</div>
+
+<div class="block block-transition">
+    <span class="label label-transition">Transition</span>
+    <p>Überleitung.</p>
+</div>
+</div>
+-->
+
+<!-- Für Live-Demo Slides: class="slide-section long" verwenden -->
+<!--
+<div class="slide-section long">
+<h2>Slide N: Live Demo <span class="time">MM:SS</span></h2>
+
+<div class="demo-step">
+    <span class="role">USE ROLE XYZ;</span> &gt; <code>SELECT ...</code>
+    <br><span class="result full">&rarr; Alle Daten sichtbar</span>
+</div>
+</div>
+-->
+
+<!-- ═══════ APPENDIX: GESPRÄCHSHINWEISE ═══════ -->
+<!--
+<div class="slide-section appendix">
+<h2>Hinweise zur Gespr&auml;chsf&uuml;hrung</h2>
+
+<div class="rules-grid">
+    <div class="rule-card">
+        <span class="num">1</span>
+        <span class="title">Regel</span>
+        <p style="margin-top:6px;">Details</p>
+    </div>
+</div>
+
+<div class="block block-warn">
+    <span class="label label-warn">Nicht tun</span>
+    <ul><li>...</li></ul>
+</div>
+</div>
+-->
+
+</body>
+</html>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} - Snowflake</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* === SNOWFLAKE CORPORATE CI === */
+            --sf-navy: #0E1C2F;
+            --sf-navy-light: #162A45;
+            --sf-navy-mid: #1A3352;
+            --sf-blue: #29B5E8;
+            --sf-blue-dark: #1B98D4;
+            --sf-violet: #7C3AED;
+            --sf-green: #00D67D;
+            --sf-white: #FFFFFF;
+            --sf-white-80: rgba(255,255,255,0.8);
+            --sf-white-60: rgba(255,255,255,0.6);
+            --sf-white-40: rgba(255,255,255,0.4);
+            --sf-white-10: rgba(255,255,255,0.10);
+            --sf-white-06: rgba(255,255,255,0.06);
+            --sf-border: rgba(255,255,255,0.12);
+            --sf-gradient-blue: linear-gradient(135deg, #29B5E8 0%, #1B7ED4 100%);
+            --sf-gradient-title: linear-gradient(180deg, #0E1C2F 0%, #162A45 100%);
+
+            /* Slide dimensions */
+            --slide-width: 1920;
+            --slide-height: 1080;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: var(--sf-white);
+            min-height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ==================== */
+        /* SLIDE CONTAINER      */
+        /* ==================== */
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+        }
+
+        .slide {
+            width: 1920px;
+            height: 1080px;
+            background: var(--sf-navy);
+            position: relative;
+            overflow: hidden;
+            transform-origin: center center;
+            flex-shrink: 0;
+            color: var(--sf-white);
+        }
+
+        @media screen {
+            .slide {
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            }
+        }
+
+        @page {
+            size: 1920px 1080px;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                overflow: visible !important;
+                scroll-snap-type: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .slide-container {
+                width: 1920px !important;
+                height: 1080px !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                break-after: page !important;
+                break-inside: avoid !important;
+                overflow: hidden !important;
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .slide-container:last-child {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+            .slide {
+                width: 1920px !important;
+                height: 1080px !important;
+                transform: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            #slide-indicator {
+                display: none !important;
+            }
+        }
+
+        /* ==================== */
+        /* TITLE SLIDE          */
+        /* ==================== */
+
+        .slide.sf-title {
+            background: var(--sf-gradient-title);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide.sf-title .sf-logo-icon {
+            margin-bottom: 40px;
+        }
+
+        .slide.sf-title h1 {
+            font-size: 96px;
+            font-weight: 800;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--sf-white);
+        }
+
+        .slide.sf-title h2 {
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--sf-white-80);
+            letter-spacing: 2px;
+            margin-bottom: 60px;
+        }
+
+        .slide.sf-title .sf-presenters {
+            display: flex;
+            gap: 40px;
+            font-size: 22px;
+            color: var(--sf-white-60);
+            font-weight: 400;
+        }
+
+        /* ==================== */
+        /* FOOTER BAR           */
+        /* ==================== */
+
+        .sf-footer-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 18px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--sf-white-40);
+            border-top: 1px solid var(--sf-border);
+        }
+
+        /* ==================== */
+        /* SLIDE NUMBER         */
+        /* ==================== */
+
+        .sf-slide-number {
+            position: absolute;
+            top: 50px;
+            right: 80px;
+            font-size: 18px;
+            color: var(--sf-white-40);
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        /* ==================== */
+        /* CONTENT AREA         */
+        /* ==================== */
+
+        .sf-content-area {
+            padding: 80px 120px 80px;
+            height: calc(1080px - 56px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .sf-content-area h1 {
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: var(--sf-white);
+        }
+
+        .sf-subtitle {
+            font-size: 24px;
+            color: var(--sf-white-60);
+            margin-bottom: 60px;
+            line-height: 1.6;
+        }
+
+        /* ==================== */
+        /* KEY STATEMENT        */
+        /* ==================== */
+
+        .sf-key-statement {
+            background: var(--sf-white-06);
+            border-left: 5px solid var(--sf-blue);
+            padding: 40px 50px;
+            margin-top: 20px;
+        }
+
+        .sf-statement-text {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--sf-white);
+        }
+
+        /* ==================== */
+        /* PRODUCT BADGE        */
+        /* ==================== */
+
+        .sf-product-badge {
+            display: inline-block;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--sf-blue);
+            margin-bottom: 40px;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--sf-blue);
+        }
+
+        /* ==================== */
+        /* PLATFORM VISUAL      */
+        /* ==================== */
+
+        .sf-platform-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .sf-platform-core {
+            background: rgba(41,181,232,0.15);
+            border: 2px solid rgba(41,181,232,0.3);
+            border-radius: 20px;
+            padding: 50px 80px;
+            text-align: center;
+        }
+
+        .sf-platform-label {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--sf-white);
+            line-height: 1.3;
+        }
+
+        .sf-capability-ring {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sf-capability {
+            background: var(--sf-white-10);
+            border: 1px solid var(--sf-border);
+            padding: 18px 32px;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--sf-white-80);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ==================== */
+        /* ARCHITECTURE STACK   */
+        /* ==================== */
+
+        .sf-architecture-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .sf-arch-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sf-arch-block {
+            flex: 1;
+            padding: 24px 30px;
+            background: var(--sf-white-10);
+            border: 1px solid var(--sf-border);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--sf-white-80);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sf-arch-block.sf-arch-primary {
+            background: rgba(41,181,232,0.2);
+            color: var(--sf-white);
+            border: 1px solid rgba(41,181,232,0.3);
+        }
+
+        .sf-arch-block.sf-arch-wide {
+            flex: 1 1 100%;
+        }
+
+        .sf-arch-block.sf-arch-foundation {
+            background: var(--sf-navy-light);
+            border: 1px solid var(--sf-border);
+            color: var(--sf-white-60);
+        }
+
+        .sf-arch-block.sf-arch-base {
+            background: var(--sf-navy-mid);
+            border: 1px solid rgba(41,181,232,0.3);
+            color: var(--sf-blue);
+        }
+
+        /* ==================== */
+        /* THREE PILLARS        */
+        /* ==================== */
+
+        .sf-pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 80px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .sf-pillar {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .sf-pillar-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sf-white-06);
+            border-radius: 50%;
+            border: 1px solid var(--sf-border);
+        }
+
+        .sf-pillar h3 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--sf-white);
+            margin-bottom: 20px;
+        }
+
+        .sf-pillar p {
+            font-size: 20px;
+            line-height: 1.6;
+            color: var(--sf-white-60);
+        }
+
+        /* ==================== */
+        /* CLOSING SLIDE        */
+        /* ==================== */
+
+        .sf-closing-statement {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--sf-white);
+            margin-bottom: 80px;
+        }
+
+        .sf-closing-pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .sf-closing-pillar {
+            background: var(--sf-white-06);
+            border: 1px solid var(--sf-border);
+            border-top: 3px solid var(--sf-blue);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .sf-closing-pillar h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--sf-white);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .sf-closing-pillar p {
+            font-size: 18px;
+            color: var(--sf-white-60);
+            line-height: 1.5;
+        }
+
+        /* ==================== */
+        /* CONTENT SLIDE UTILS  */
+        /* ==================== */
+
+        .sf-bullets {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .sf-bullets li {
+            padding: 18px 0;
+            font-size: 24px;
+            color: var(--sf-white-80);
+            border-bottom: 1px solid var(--sf-border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sf-bullets li:last-child {
+            border-bottom: none;
+        }
+
+        .sf-bullets li::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--sf-blue);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sf-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            height: 100%;
+        }
+
+        .sf-kpi {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .sf-kpi-number {
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--sf-blue);
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .sf-kpi-label {
+            font-size: 20px;
+            color: var(--sf-white-60);
+            font-weight: 400;
+        }
+
+        .sf-card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .sf-card-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .sf-card {
+            background: var(--sf-white-06);
+            border: 1px solid var(--sf-border);
+            padding: 30px;
+        }
+
+        .sf-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--sf-white);
+            margin-bottom: 12px;
+        }
+
+        .sf-card p {
+            font-size: 18px;
+            color: var(--sf-white-60);
+            line-height: 1.5;
+        }
+
+        .sf-card.accent-top {
+            border-top: 3px solid var(--sf-blue);
+        }
+
+        .sf-highlight-text {
+            color: var(--sf-blue);
+        }
+
+        /* ==================== */
+        /* COMPARISON TABLE     */
+        /* ==================== */
+
+        .sf-comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+            margin-top: 40px;
+        }
+
+        .sf-comparison-table th {
+            background: var(--sf-navy-light);
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--sf-white);
+            border-bottom: 2px solid var(--sf-border);
+        }
+
+        .sf-comparison-table th:last-child {
+            background: rgba(41,181,232,0.15);
+            color: var(--sf-blue);
+        }
+
+        .sf-comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--sf-border);
+            color: var(--sf-white-80);
+        }
+
+        .sf-comparison-table td.yes {
+            color: var(--sf-green);
+            font-weight: 600;
+        }
+
+        .sf-comparison-table td.partial {
+            color: #f0a500;
+            font-weight: 500;
+        }
+
+        .sf-comparison-table td.no {
+            color: #cc4444;
+        }
+
+        /* ==================== */
+        /* SLIDE INDICATOR      */
+        /* ==================== */
+
+        #slide-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(14, 28, 47, 0.9);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--sf-border);
+        }
+
+        #slide-indicator #current-slide {
+            color: var(--sf-blue);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<script>
+    let currentSlide = 0, totalSlides = 0, isAnimating = false, wheelAccumulator = 0, wheelTimeout = null;
+    const WHEEL_THRESHOLD = 80, ANIMATION_DURATION = 600;
+
+    function scaleSlides() {
+        document.querySelectorAll('.slide').forEach(slide => {
+            const c = slide.parentElement;
+            let cw, ch;
+            if (c && c.classList.contains('slide-container')) { cw = c.clientWidth; ch = c.clientHeight; }
+            else { cw = window.innerWidth; ch = window.innerHeight; }
+            slide.style.transform = `scale(${Math.min(cw/1920, ch/1080, 1)})`;
+        });
+    }
+
+    function initSlides() {
+        const slides = document.querySelectorAll('body > .slide');
+        totalSlides = slides.length;
+        slides.forEach((slide, i) => {
+            const c = document.createElement('div');
+            c.className = 'slide-container'; c.id = `slide-${i+1}`;
+            slide.parentNode.insertBefore(c, slide); c.appendChild(slide);
+        });
+        const ind = document.createElement('div'); ind.id = 'slide-indicator';
+        ind.innerHTML = `<span id="current-slide">1</span> / ${totalSlides}`;
+        document.body.appendChild(ind);
+        scaleSlides(); updateSlideIndicator();
+    }
+
+    function goToSlide(n) {
+        const c = document.querySelectorAll('.slide-container');
+        if (n >= 0 && n < c.length) { c[n].scrollIntoView({behavior:'smooth'}); currentSlide = n; updateSlideIndicator(); }
+    }
+
+    function updateSlideIndicator() {
+        document.querySelectorAll('.slide-container').forEach((c,i) => {
+            const r = c.getBoundingClientRect();
+            if (r.top <= window.innerHeight/2 && r.bottom >= window.innerHeight/2) currentSlide = i;
+        });
+        const ind = document.getElementById('current-slide');
+        if (ind) ind.textContent = currentSlide + 1;
+    }
+
+    function nav(t) {
+        if (isAnimating || t<0 || t>=totalSlides || t===currentSlide) return;
+        isAnimating = true; wheelAccumulator = 0; goToSlide(t);
+        setTimeout(() => { isAnimating = false; updateSlideIndicator(); }, ANIMATION_DURATION);
+    }
+
+    document.addEventListener('keydown', e => {
+        if (isAnimating) return;
+        switch(e.key) {
+            case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); nav(currentSlide+1); break;
+            case 'ArrowUp': case 'ArrowLeft': case 'PageUp': e.preventDefault(); nav(currentSlide-1); break;
+            case 'Home': e.preventDefault(); nav(0); break;
+            case 'End': e.preventDefault(); nav(totalSlides-1); break;
+        }
+    });
+
+    document.addEventListener('wheel', e => {
+        e.preventDefault(); if (isAnimating) return;
+        wheelAccumulator += e.deltaY; clearTimeout(wheelTimeout);
+        if (Math.abs(wheelAccumulator) >= WHEEL_THRESHOLD) {
+            nav(currentSlide + (wheelAccumulator > 0 ? 1 : -1)); wheelAccumulator = 0;
+        } else { wheelTimeout = setTimeout(() => { wheelAccumulator = 0; }, 200); }
+    }, {passive:false});
+
+    let touchStartY = 0;
+    document.addEventListener('touchstart', e => { if (!isAnimating) touchStartY = e.changedTouches[0].screenY; }, {passive:true});
+    document.addEventListener('touchend', e => {
+        if (isAnimating) return; const d = touchStartY - e.changedTouches[0].screenY;
+        if (Math.abs(d) > 50) nav(currentSlide + (d > 0 ? 1 : -1));
+    }, {passive:true});
+
+    window.addEventListener('DOMContentLoaded', initSlides);
+    window.addEventListener('resize', scaleSlides);
+    let scrollEnd; window.addEventListener('scroll', () => { clearTimeout(scrollEnd); scrollEnd = setTimeout(() => { if (!isAnimating) updateSlideIndicator(); }, 100); });
+</script>
+
+<!-- ==================== -->
+<!-- SLIDES START HERE    -->
+<!-- ==================== -->
+
+<!-- Slide 1: Title -->
+<div class="slide sf-title">
+    <div class="sf-logo-icon">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg"
+             alt="Snowflake" style="height: 80px; opacity: 0.3;">
+    </div>
+    <h1>SNOWFLAKE</h1>
+    <h2>{{SUBTITLE}}</h2>
+    <div class="sf-presenters">
+        <span>{{PRESENTER_1}}</span>
+        <span>{{PRESENTER_2}}</span>
+    </div>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+<!-- Slide 2: Statement -->
+<div class="slide">
+    <div class="sf-slide-number">2</div>
+    <div class="sf-content-area">
+        <h1>{{STATEMENT_TITLE}}</h1>
+        <p class="sf-subtitle">{{STATEMENT_SUBTITLE}}</p>
+        <div class="sf-key-statement">
+            <div class="sf-statement-text">
+                {{KEY_STATEMENT_LINE_1}}<br>
+                {{KEY_STATEMENT_LINE_2}}
+            </div>
+        </div>
+    </div>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+<!-- Slide 3: Platform Overview -->
+<div class="slide">
+    <div class="sf-slide-number">3</div>
+    <div class="sf-content-area" style="align-items: center; text-align: center;">
+        <h1>{{PLATFORM_TITLE}}</h1>
+        <div class="sf-platform-visual">
+            <div class="sf-platform-core">
+                <div class="sf-platform-label">{{PLATFORM_LINE_1}}</div>
+                <div class="sf-platform-label">{{PLATFORM_LINE_2}}</div>
+                <div class="sf-platform-label">{{PLATFORM_LINE_3}}</div>
+            </div>
+            <div class="sf-capability-ring">
+                <!-- Add capability blocks as needed -->
+            </div>
+        </div>
+    </div>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+<!-- Slide 4: Product Architecture -->
+<div class="slide">
+    <div class="sf-slide-number">4</div>
+    <div class="sf-content-area">
+        <h1>{{ARCHITECTURE_TITLE}}</h1>
+        <div class="sf-product-badge">{{PRODUCT_NAME}}</div>
+        <div class="sf-architecture-stack">
+            <!-- Add architecture rows as needed -->
+        </div>
+    </div>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+<!-- Slide 5: Three Pillars -->
+<div class="slide">
+    <div class="sf-slide-number">5</div>
+    <div class="sf-content-area" style="align-items: center;">
+        <h1>{{PILLARS_TITLE}}</h1>
+        <div class="sf-pillars">
+            <div class="sf-pillar">
+                <div class="sf-pillar-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <h3>{{PILLAR_1_TITLE}}</h3>
+                <p>{{PILLAR_1_TEXT}}</p>
+            </div>
+            <div class="sf-pillar">
+                <div class="sf-pillar-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <h3>{{PILLAR_2_TITLE}}</h3>
+                <p>{{PILLAR_2_TEXT}}</p>
+            </div>
+            <div class="sf-pillar">
+                <div class="sf-pillar-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                <h3>{{PILLAR_3_TITLE}}</h3>
+                <p>{{PILLAR_3_TEXT}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+<!-- Slide 6: Demo Transition -->
+<div class="slide" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+    <div style="margin-bottom: 40px;">
+        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="var(--sf-blue)" stroke-width="1" opacity="0.6">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8" fill="var(--sf-blue)" stroke="none"/>
+        </svg>
+    </div>
+    <h1 style="font-size: 72px; font-weight: 300; letter-spacing: 8px; text-transform: uppercase;">Demo</h1>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+<!-- Slide 7: Closing CTA -->
+<div class="slide">
+    <div class="sf-content-area" style="align-items: center; text-align: center;">
+        <div class="sf-closing-statement">
+            {{CLOSING_LINE_1}}<br>
+            <span class="sf-highlight-text">{{CLOSING_LINE_2}}</span>
+        </div>
+        <div class="sf-closing-pillars">
+            <div class="sf-closing-pillar">
+                <h3>{{CTA_1_TITLE}}</h3>
+                <p>{{CTA_1_TEXT}}</p>
+            </div>
+            <div class="sf-closing-pillar">
+                <h3>{{CTA_2_TITLE}}</h3>
+                <p>{{CTA_2_TEXT}}</p>
+            </div>
+            <div class="sf-closing-pillar">
+                <h3>{{CTA_3_TITLE}}</h3>
+                <p>{{CTA_3_TEXT}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="sf-footer-bar">
+        <span>© 2025 Snowflake Inc. All Rights Reserved</span>
+    </div>
+</div>
+
+</body>
+</html>

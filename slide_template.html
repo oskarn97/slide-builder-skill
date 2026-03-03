@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} - Workshop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* === CUSTOMER CI - CUSTOMIZE THESE === */
+            --primary-color: {{PRIMARY_COLOR}};       /* z.B. #00D67D */
+            --secondary-color: {{SECONDARY_COLOR}};   /* z.B. #00A878 */
+            --bg-dark: {{BG_DARK}};                   /* z.B. #0D2818 */
+            
+            /* Snowflake (usually fixed) */
+            --snowflake-blue: #29B5E8;
+            
+            /* Text */
+            --text-dark: #1a1a1a;
+            --text-light: #666666;
+            
+            /* Backgrounds */
+            --bg-light: #f5f7f6;
+            
+            /* Slide dimensions */
+            --slide-width: 1920;
+            --slide-height: 1080;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a1a;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ==================== */
+        /* SLIDE CONTAINER      */
+        /* ==================== */
+        
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+        }
+
+        .slide {
+            width: 1920px;
+            height: 1080px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            transform-origin: center center;
+            flex-shrink: 0;
+        }
+
+        @media screen {
+            .slide {
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            }
+        }
+
+        @page {
+            size: 1920px 1080px;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                overflow: visible !important;
+                scroll-snap-type: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .slide-container {
+                width: 1920px !important;
+                height: 1080px !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                break-after: page !important;
+                break-inside: avoid !important;
+                overflow: hidden !important;
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .slide-container:last-child {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+            .slide {
+                width: 1920px !important;
+                height: 1080px !important;
+                transform: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            #slide-indicator {
+                display: none !important;
+            }
+        }
+
+        /* ==================== */
+        /* TITLE SLIDE          */
+        /* ==================== */
+        
+        .slide.title {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a4d2e 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide.title h1 {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .slide.title h2 {
+            font-size: 42px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 60px;
+        }
+
+        .slide.title .meta {
+            font-size: 24px;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .slide.title .logos {
+            position: absolute;
+            bottom: 60px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .slide.title .logos img {
+            height: 50px;
+        }
+
+        .slide.title .accent {
+            color: var(--primary-color);
+        }
+
+        /* ==================== */
+        /* DARK SLIDE           */
+        /* ==================== */
+        
+        .slide.dark {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a4d2e 100%);
+            color: white;
+        }
+
+        .slide.dark h1, .slide.dark h2, .slide.dark h3 {
+            color: white;
+        }
+
+        /* ==================== */
+        /* SLIDE HEADER         */
+        /* ==================== */
+        
+        .slide-header {
+            padding: 36px 80px 28px;
+            padding-left: 0;
+            background: white;
+            color: var(--text-dark);
+            display: flex;
+            align-items: stretch;
+            gap: 40px;
+        }
+
+        .slide-header::before {
+            content: '';
+            display: block;
+            width: 12px;
+            flex-shrink: 0;
+            background: var(--snowflake-blue, #29B5E8);
+        }
+
+        .slide-header h1 {
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .slide-header .title-row {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .slide-header .subtitle {
+            font-size: 26px;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+
+        .slide-header .badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 214, 125, 0.3);
+        }
+
+        /* ==================== */
+        /* SLIDE CONTENT        */
+        /* ==================== */
+        
+        .slide-content {
+            padding: 60px 80px;
+            height: calc(1080px - 140px);
+        }
+
+        .slide.dark .slide-content {
+            height: calc(1080px - 200px);
+        }
+
+        /* ==================== */
+        /* SLIDE FOOTER         */
+        /* ==================== */
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            color: var(--text-light);
+            border-top: 1px solid #e8e8e8;
+        }
+
+        /* ==================== */
+        /* SECTION TITLE        */
+        /* ==================== */
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* ==================== */
+        /* LAYOUTS              */
+        /* ==================== */
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .two-column.wide-left {
+            grid-template-columns: 1.3fr 0.7fr;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .card-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card-grid.four-col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* ==================== */
+        /* CARDS                */
+        /* ==================== */
+        
+        .card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 35px;
+        }
+
+        .card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .card p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        .card.highlight {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a4d2e 100%);
+            color: white;
+        }
+
+        .card.highlight h3 {
+            color: var(--primary-color);
+        }
+
+        .card.highlight p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* ==================== */
+        /* HIGHLIGHT BOX        */
+        /* ==================== */
+        
+        .highlight-box {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a4d2e 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+        }
+
+        .highlight-box h3 {
+            color: var(--primary-color);
+            font-size: 26px;
+            margin-bottom: 25px;
+        }
+
+        /* ==================== */
+        /* LISTS                */
+        /* ==================== */
+        
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .feature-list .content h4 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-list .content p {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        .value-list {
+            list-style: none;
+        }
+
+        .value-list li {
+            padding: 15px 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .value-list li:last-child {
+            border-bottom: none;
+        }
+
+        .value-list li::before {
+            content: "→";
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* ==================== */
+        /* COMPARISON TABLE     */
+        /* ==================== */
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        .comparison-table th {
+            background: var(--bg-light);
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .comparison-table th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .comparison-table th:last-child {
+            border-radius: 0 12px 0 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table td.yes {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .comparison-table td.partial {
+            color: #f0a500;
+            font-weight: 500;
+        }
+
+        .comparison-table td.no {
+            color: #cc0000;
+        }
+
+        /* ==================== */
+        /* SLIDE INDICATOR      */
+        /* ==================== */
+        
+        #slide-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #slide-indicator #current-slide {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<script>
+    let currentSlide = 0;
+    let totalSlides = 0;
+
+    function scaleSlides() {
+        const slides = document.querySelectorAll('.slide');
+        const slideWidth = 1920;
+        const slideHeight = 1080;
+        
+        slides.forEach(slide => {
+            const container = slide.parentElement;
+            let containerWidth, containerHeight;
+            
+            if (container && container.classList.contains('slide-container')) {
+                containerWidth = container.clientWidth;
+                containerHeight = container.clientHeight;
+            } else {
+                containerWidth = window.innerWidth;
+                containerHeight = window.innerHeight;
+            }
+            
+            const scaleX = containerWidth / slideWidth;
+            const scaleY = containerHeight / slideHeight;
+            const scale = Math.min(scaleX, scaleY, 1);
+            
+            slide.style.transform = `scale(${scale})`;
+        });
+    }
+
+    function initSlides() {
+        const slides = document.querySelectorAll('body > .slide');
+        totalSlides = slides.length;
+        
+        slides.forEach((slide, index) => {
+            const container = document.createElement('div');
+            container.className = 'slide-container';
+            container.id = `slide-${index + 1}`;
+            slide.parentNode.insertBefore(container, slide);
+            container.appendChild(slide);
+        });
+        
+        const indicator = document.createElement('div');
+        indicator.id = 'slide-indicator';
+        indicator.innerHTML = `<span id="current-slide">1</span> / ${totalSlides}`;
+        document.body.appendChild(indicator);
+        
+        scaleSlides();
+        updateSlideIndicator();
+    }
+
+    function goToSlide(n) {
+        const containers = document.querySelectorAll('.slide-container');
+        if (n >= 0 && n < containers.length) {
+            containers[n].scrollIntoView({ behavior: 'smooth' });
+            currentSlide = n;
+            updateSlideIndicator();
+        }
+    }
+
+    function updateSlideIndicator() {
+        const containers = document.querySelectorAll('.slide-container');
+        
+        containers.forEach((container, index) => {
+            const rect = container.getBoundingClientRect();
+            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                currentSlide = index;
+            }
+        });
+        
+        const indicator = document.getElementById('current-slide');
+        if (indicator) {
+            indicator.textContent = currentSlide + 1;
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (isAnimating) return;
+        
+        switch(e.key) {
+            case 'ArrowDown':
+            case 'ArrowRight':
+            case ' ':
+            case 'PageDown':
+                e.preventDefault();
+                navigateToSlide(currentSlide + 1);
+                break;
+            case 'ArrowUp':
+            case 'ArrowLeft':
+            case 'PageUp':
+                e.preventDefault();
+                navigateToSlide(currentSlide - 1);
+                break;
+            case 'Home':
+                e.preventDefault();
+                navigateToSlide(0);
+                break;
+            case 'End':
+                e.preventDefault();
+                navigateToSlide(totalSlides - 1);
+                break;
+        }
+    });
+
+    // Wheel navigation with strict single-slide control
+    let isAnimating = false;
+    let wheelAccumulator = 0;
+    let wheelTimeout = null;
+    const WHEEL_THRESHOLD = 80;  // Higher threshold for stability
+    const ANIMATION_DURATION = 600;  // Animation lock duration
+    
+    function navigateToSlide(targetSlide) {
+        if (isAnimating) return;
+        if (targetSlide < 0 || targetSlide >= totalSlides) return;
+        if (targetSlide === currentSlide) return;
+        
+        isAnimating = true;
+        wheelAccumulator = 0;
+        
+        goToSlide(targetSlide);
+        setTimeout(() => {
+            isAnimating = false;
+            updateSlideIndicator();
+        }, ANIMATION_DURATION);
+    }
+    
+    document.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        
+        if (isAnimating) return;
+        
+        // Accumulate wheel delta
+        wheelAccumulator += e.deltaY;
+        
+        // Clear previous timeout
+        clearTimeout(wheelTimeout);
+        
+        // Check if accumulated enough to trigger navigation
+        if (Math.abs(wheelAccumulator) >= WHEEL_THRESHOLD) {
+            if (wheelAccumulator > 0) {
+                navigateToSlide(currentSlide + 1);
+            } else {
+                navigateToSlide(currentSlide - 1);
+            }
+            wheelAccumulator = 0;
+        } else {
+            // Reset accumulator after a pause
+            wheelTimeout = setTimeout(() => {
+                wheelAccumulator = 0;
+            }, 200);
+        }
+    }, { passive: false });
+
+    // Touch navigation for mobile
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        if (isAnimating) return;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    
+    document.addEventListener('touchend', (e) => {
+        if (isAnimating) return;
+        
+        const touchEndY = e.changedTouches[0].screenY;
+        const diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                navigateToSlide(currentSlide + 1);
+            } else {
+                navigateToSlide(currentSlide - 1);
+            }
+        }
+    }, { passive: true });
+
+    // Run on load and resize
+    window.addEventListener('DOMContentLoaded', initSlides);
+    window.addEventListener('resize', scaleSlides);
+    
+    // Update indicator when scroll ends (for edge cases)
+    let scrollEndTimeout;
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollEndTimeout);
+        scrollEndTimeout = setTimeout(() => {
+            if (!isAnimating) {
+                updateSlideIndicator();
+            }
+        }, 100);
+    });
+</script>
+
+<!-- ==================== -->
+<!-- SLIDES START HERE    -->
+<!-- ==================== -->
+
+<!-- Slide 1: Title -->
+<div class="slide title">
+    <h1>{{MAIN_TITLE}}</h1>
+    <h2>From <span class="accent">{{PROBLEM}}</span> to <span class="accent">{{SOLUTION}}</span></h2>
+    <div class="meta">
+        {{EVENT_NAME}}<br>
+        {{LOCATION}} | {{DATE}}
+    </div>
+    <div class="logos">
+        <img src="{{CUSTOMER_LOGO_URL}}" alt="{{CUSTOMER_NAME}}" style="height: 45px; filter: brightness(0) invert(1);">
+        <span style="opacity: 0.4; font-size: 24px;">×</span>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" alt="Snowflake" style="height: 40px;">
+    </div>
+</div>
+
+<!-- Slide 2: Agenda -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <h1>Today's Agenda</h1>
+        </div>
+    </div>
+    <div class="slide-content">
+        <!-- Agenda items here -->
+    </div>
+    <div class="slide-footer">
+        <span>{{EVENT_NAME}}</span>
+        <span>2</span>
+    </div>
+</div>
+
+<!-- Add more slides following the patterns in slide_builder.md -->
+
+</body>
+</html>
