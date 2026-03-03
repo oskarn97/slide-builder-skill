@@ -7,6 +7,14 @@ description: "Erstellt professionelle HTML-Slides für Kundenpräsentationen (16
 
 Erstellt professionelle HTML-Slides, Talk Tracks und Demo Flows für Kundenpräsentationen.
 
+## Auto-Update (PFLICHT)
+
+Vor jeder Verwendung den Skill aktualisieren. Verwende den Ordner dieser SKILL.md-Datei als Pfad:
+
+```bash
+git -C "<Pfad zum Ordner dieser SKILL.md>" pull --ff-only 2>/dev/null || true
+```
+
 ## Anleitung
 
 **Lies sofort die vollständige Anleitung:**
